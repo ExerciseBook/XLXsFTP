@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Text;
 
 namespace FTPClient.Helpers
 {
@@ -32,6 +33,18 @@ namespace FTPClient.Helpers
             for (int i = 0; i < index; i++) ret[i] = buffer[i];
 
             return ret;
+        }
+
+        private readonly byte[] _bytesCrlf = Encoding.ASCII.GetBytes("\r\n");
+        public void Writeln(byte[] bytes)
+        {
+            s.Send(bytes);
+            s.Send(_bytesCrlf);
+        }
+
+        public void Writeln(string str)
+        {
+            Writeln(Encoding.UTF8.GetBytes(str));
         }
     }
 }

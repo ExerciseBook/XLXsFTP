@@ -16,61 +16,17 @@ namespace Test
     public class SocketHelperTest
     {
 
-        async private void StartService()
-        {
-            // Setup dependency injection
-            var services = new ServiceCollection();
-
-            // use %TEMP%/TestFtpServer as root folder
-            services.Configure<DotNetFileSystemOptions>(opt => opt
-                .RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
-
-            // Add FTP server services
-            // DotNetFileSystemProvider = Use the .NET file system functionality
-            // AnonymousMembershipProvider = allow only anonymous logins
-            services.AddFtpServer(builder => builder
-                .UseDotNetFileSystem() // Use the .NET file system functionality
-                .EnableAnonymousAuthentication()); // allow anonymous logins
-
-            // Configure the FTP server
-             services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
-
-            // Build the service provider
-            using (var serviceProvider = services.BuildServiceProvider())
-            {
-                // Initialize the FTP server
-                var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
-
-                // Start the FTP server
-                await ftpServerHost.StartAsync();
-
-                Console.WriteLine("Press ENTER/RETURN to close the test application.");
-                Console.ReadLine();
-
-                // Stop the FTP server
-                await ftpServerHost.StopAsync();
-            }
-        }
-
-        public void StartServiceThread()
-        {
-            ThreadStart childref = new ThreadStart(StartService);
-            Thread childThread = new Thread(childref);
-            childThread.Start();
-        }
-
-
         /// <summary>
         /// 测试 Readln
         /// </summary>
         [TestMethod]
         public void TestReadln()
         {
-            StartServiceThread();
+            FTPServer.StartServiceThread();
+            // while (true) { }
 
             var port = 21;
             var hostEntry = Dns.GetHostEntry("127.0.0.1");
-            
             foreach (IPAddress address in hostEntry.AddressList)
             {
                 IPEndPoint ipe = new IPEndPoint(address, port);
@@ -89,16 +45,28 @@ namespace Test
                 {
                     var s = new SocketHelper(tempSocket);
 
+                    // 连接
                     String line = System.Text.Encoding.UTF8.GetString(s.Readln());
-                    
-
                     Assert.AreEqual(line, "220 FTP Server Ready");
+                    
+                    // 输入用户名
+                    s.Writeln("USER anonymous");
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    Assert.AreEqual(line, "331 User anonymous logged in, needs password");
+
+                    // 输入密码
+                    s.Writeln("PASS anonymous@example.com");
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    Assert.AreEqual(line, "230 Password ok, FTP server ready");
+
+                    // 尝试列出目录
+                    s.Writeln("LIST");
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    Assert.AreEqual(line, "150 Opening data connection.");
+                    
                     return;
                 }
-
-                
             }
-
             Assert.IsTrue(false);
         }
 
