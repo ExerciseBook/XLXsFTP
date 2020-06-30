@@ -12,7 +12,7 @@ namespace FTPClient.Helpers
             this.s = s;
         }
 
-        public byte[] Readln()
+        public byte[] Readln(out int status)
         {
             byte[] buffer = new byte[65536];
 
@@ -30,9 +30,27 @@ namespace FTPClient.Helpers
 
             byte[] ret = new byte[index];
 
-            for (int i = 0; i < index; i++) ret[i] = buffer[i];
+            status = 0;
+            bool flag = true;
+            for (int i = 0; i < index; i++)
+            {
+                ret[i] = buffer[i];
+
+                if (ret[i] == ' ')
+                {
+                    flag = false;
+                } else if (flag)
+                {
+                    status = status * 10 + ret[i] - 48;
+                }
+            }
 
             return ret;
+        }
+        public byte[] Readln()
+        {
+            int status;
+            return Readln(out status);
         }
 
         private readonly byte[] _bytesCrlf = Encoding.ASCII.GetBytes("\r\n");

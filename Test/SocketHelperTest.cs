@@ -46,22 +46,27 @@ namespace Test
                     var s = new SocketHelper(tempSocket);
 
                     // 连接
-                    String line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    int status;
+                    String line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 220);
                     Assert.AreEqual(line, "220 FTP Server Ready");
                     
                     // 输入用户名
                     s.Writeln("USER anonymous");
-                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 331);
                     Assert.AreEqual(line, "331 User anonymous logged in, needs password");
 
                     // 输入密码
                     s.Writeln("PASS anonymous@example.com");
-                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 230);
                     Assert.AreEqual(line, "230 Password ok, FTP server ready");
 
                     // 尝试列出目录
                     s.Writeln("LIST");
-                    line = System.Text.Encoding.UTF8.GetString(s.Readln());
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 150);
                     Assert.AreEqual(line, "150 Opening data connection.");
                     
                     return;
