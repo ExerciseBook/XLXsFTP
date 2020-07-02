@@ -63,12 +63,6 @@ namespace Test
                     Assert.AreEqual(status, 230);
                     Assert.AreEqual(line, "230 Password ok, FTP server ready");
 
-                    // 尝试列出目录
-                    s.Writeln("LIST");
-                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
-                    Assert.AreEqual(status, 150);
-                    Assert.AreEqual(line, "150 Opening data connection.");
-
                     // 被动模式
                     s.Writeln("PASV");
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
@@ -76,6 +70,24 @@ namespace Test
                     //Assert.AreEqual(line, "227 Entering Passive Mode (127,0,0,1,211,82).");
                     //地址:127.0.0.1 端口:211*256+82
 
+                    // 创建数据连接
+                    IPEndPoint dataIPE = CommandHelper.AddressParser(line);
+                    Socket dataSocket = new Socket(dataIPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    try
+                    {
+                        tempSocket.Connect(ipe);
+                    }
+                    catch (Exception e)
+                    {
+                        tempSocket.Close();
+                        continue;
+                    }
+
+                    // 尝试列出目录
+                    s.Writeln("LIST");
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 150);
+                    Assert.AreEqual(line, "150 Opening data connection.");
 
                     return;
                 }
