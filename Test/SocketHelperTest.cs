@@ -17,7 +17,7 @@ namespace Test
     {
 
         /// <summary>
-        /// ²âÊÔ Readln
+        /// æµ‹è¯• Readln
         /// </summary>
         [TestMethod]
         public void TestReadln()
@@ -45,32 +45,32 @@ namespace Test
                 {
                     var s = new SocketHelper(tempSocket);
 
-                    // Á¬½Ó
+                    // è¿æ¥
                     int status;
                     String line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 220);
                     Assert.AreEqual(line, "220 FTP Server Ready");
                     
-                    // ÊäÈëÓÃ»§Ãû
+                    // è¾“å…¥ç”¨æˆ·å
                     s.Writeln("USER anonymous");
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 331);
                     Assert.AreEqual(line, "331 User anonymous logged in, needs password");
 
-                    // ÊäÈëÃÜÂë
+                    // è¾“å…¥å¯†ç 
                     s.Writeln("PASS anonymous@example.com");
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 230);
                     Assert.AreEqual(line, "230 Password ok, FTP server ready");
 
-                    // ±»¶¯Ä£Ê½
+                    // è¢«åŠ¨æ¨¡å¼
                     s.Writeln("PASV");
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 227);
                     //Assert.AreEqual(line, "227 Entering Passive Mode (127,0,0,1,211,82).");
-                    //µØÖ·:127.0.0.1 ¶Ë¿Ú:211*256+82
+                    //åœ°å€:127.0.0.1 ç«¯å£:211*256+82
 
-                    // ´´½¨Êı¾İÁ¬½Ó
+                    // åˆ›å»ºæ•°æ®è¿æ¥
                     IPEndPoint dataIPE = CommandHelper.AddressParser(line);
                     Socket dataSocket = new Socket(dataIPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     try
@@ -83,7 +83,7 @@ namespace Test
                         continue;
                     }
 
-                    // ³¢ÊÔÁĞ³öÄ¿Â¼
+                    // å°è¯•åˆ—å‡ºç›®å½•
                     s.Writeln("LIST");
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 150);
