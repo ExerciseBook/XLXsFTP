@@ -68,7 +68,15 @@ namespace Test
                     line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
                     Assert.AreEqual(status, 150);
                     Assert.AreEqual(line, "150 Opening data connection.");
-                    
+
+                    // 被动模式
+                    s.Writeln("PASV");
+                    line = System.Text.Encoding.UTF8.GetString(s.Readln(out status));
+                    Assert.AreEqual(status, 227);
+                    //Assert.AreEqual(line, "227 Entering Passive Mode (127,0,0,1,211,82).");
+                    //地址:127.0.0.1 端口:211*256+82
+
+
                     return;
                 }
             }
