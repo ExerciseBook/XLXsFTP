@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Sockets;
 
 namespace FTPClient.Helpers
 {
@@ -41,5 +42,18 @@ namespace FTPClient.Helpers
                 return "";
             }
         }
+
+        /// <summary>
+        /// 创建数据连接
+        /// </summary>
+        /// <param name="line"></param>
+        public static Socket AddressParserAndConnect(string line)
+        {
+            IPEndPoint IPE = CommandHelper.AddressParser(line);
+            Socket dataSocket = new Socket(IPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            dataSocket.Connect(IPE);
+            return dataSocket;
+        }
+
     }
 }
