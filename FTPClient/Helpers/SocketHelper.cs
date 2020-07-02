@@ -20,7 +20,7 @@ namespace FTPClient.Helpers
             byte[] read = new byte[1];
             do
             {
-                _s.Receive(read);
+                if (_s.Receive(read) == 0) break;
                 if (read[0] != '\r' && read[0] != '\n')
                 {
                     buffer[index] = read[0];
@@ -36,7 +36,7 @@ namespace FTPClient.Helpers
             {
                 ret[i] = buffer[i];
 
-                if (ret[i] == ' ')
+                if (ret[i] < '0' || ret[i] > '9')
                 {
                     flag = false;
                 } else if (flag)

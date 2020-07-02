@@ -1,12 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using FTPClient.Helpers;
 
 namespace FTPClient.Client
 {
+    /// <summary>
+    /// FTP 客户端封装
+    /// </summary>
     public class Client
     {
+        //TODO 来个好哥哥把整个类里的东西都写成支持异步
+
         private readonly Socket _commandConnection;
         private readonly IPEndPoint _serverIpe;
         private readonly Authorization _authorization;
@@ -89,6 +95,7 @@ namespace FTPClient.Client
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
             //请注意：在文件上传模式下，数据连接 和 指令连接 应当同时监听，在数据连接上传数据的时候，要监听指令连接是否有发来信息
             //文档 https://tools.ietf.org/html/rfc959 第 51 面
+            //当然，Receive 的时候还要记得判断一下 Receive 的返回值是否大于零
             throw new NotImplementedException();
         }
 
@@ -146,21 +153,57 @@ namespace FTPClient.Client
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
             //请注意：在文件上传模式下，数据连接 和 指令连接 应当同时监听，在数据连接上传数据的时候，要监听指令连接是否有发来信息
             //文档 https://tools.ietf.org/html/rfc959 第 51 面
+            //当然，Receive 的时候还要记得判断一下 Receive 的返回值是否大于零
             throw new NotImplementedException();
         }
 
         /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="filename"></param>
-        public void Delete(string filename)
+        /// <param name="path"></param>
+        public void Delete(string path)
         {
             int status;
             string line;
 
-            _commandHelper.Writeln("DELE " + filename);
+            _commandHelper.Writeln("DELE " + path);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 250) throw new FTPClientException(status, line);
+        }
+
+        public List<string> List(string path)
+        {
+            int status;
+            string line;
+
+            // PASV => 227;
+            _commandHelper.Writeln("PASV");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 227) throw new FTPClientException(status, line);
+
+
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
+            SocketHelper dataHelper = new SocketHelper(dataSocket);
+
+            _commandHelper.Writeln("LIST " + path);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 150) throw new FTPClientException(status, line);
+
+            List<string> ret = new List<string>();
+            do
+            {
+                //TODO 来个好哥哥把这个 List<string> 更换为可读性更高的版本吧
+                line = System.Text.Encoding.UTF8.GetString(dataHelper.Readln());
+                if (line.Length > 0) ret.Add(line);
+            } while (line.Length != 0);
+
+            // 226 => 结束数据连接
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if  (status != 250) throw new FTPClientException(status, line);
+            dataSocket.Close();
+
+            return ret;
         }
     }
 }

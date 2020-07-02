@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -41,11 +42,16 @@ namespace Test
             int filesize = fileContentsBytes.Length;
 
 
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+            List<string> list;
+
+
             // 测试文件上传
             TestUpload(client, filename, fileContentsBytes);
 
             // 测试目录列表
-            //TestList(client, "/");
+            list = TestList(client, "/");
+            //TODO 检查文件是否上传成功
 
             // 测试文件下载
             byte[] downloadedFile = TestDownload(client, filename);
@@ -55,8 +61,8 @@ namespace Test
             TestDelete(client, filename);
 
             // 测试文件列表
-            //TestList(client, "/");
-
+            TestList(client, "/");
+            //TODO 检查文件是否删除成功
         }
 
         private void TestUpload(Client client, string filename, byte[] fileContentsBytes)
@@ -69,9 +75,9 @@ namespace Test
             return client.Download(filename);
         }
 
-        private void TestList(Client client, string s)
+        private List<string> TestList(Client client, string s)
         {
-            throw new NotImplementedException();
+            return client.List(s);
         }
 
         private void TestDelete(Client client, string filename)
