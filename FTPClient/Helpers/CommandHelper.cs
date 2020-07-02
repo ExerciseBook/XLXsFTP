@@ -5,6 +5,11 @@ namespace FTPClient.Helpers
 {
     public class CommandHelper
     {
+        /// <summary>
+        /// 解析 IPE 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static IPEndPoint AddressParser(string s)
         {
             var str = GetMiddleText(s, "(", ")");
@@ -16,7 +21,14 @@ namespace FTPClient.Helpers
             return new IPEndPoint(ip, port);
         }
 
-        private static string GetMiddleText(string t, string k, string j) //取出中间文本
+        /// <summary>
+        /// 取文本中间
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="k"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
+        private static string GetMiddleText(string t, string k, string j)
         {
             try
             {
