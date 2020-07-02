@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Test
 {
-    public class FTPServer
+    public class FtpServer
     {
         private static int _status = 0;
 

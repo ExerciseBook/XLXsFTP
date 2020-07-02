@@ -5,11 +5,11 @@ namespace FTPClient.Helpers
 {
     public class SocketHelper
     {
-        private Socket s;
+        private Socket _s;
 
         public SocketHelper(Socket s)
         {
-            this.s = s;
+            this._s = s;
         }
 
         public byte[] Readln(out int status)
@@ -20,7 +20,7 @@ namespace FTPClient.Helpers
             byte[] read = new byte[1];
             do
             {
-                s.Receive(read);
+                _s.Receive(read);
                 if (read[0] != '\r' && read[0] != '\n')
                 {
                     buffer[index] = read[0];
@@ -56,8 +56,8 @@ namespace FTPClient.Helpers
         private readonly byte[] _bytesCrlf = Encoding.ASCII.GetBytes("\r\n");
         public void Writeln(byte[] bytes)
         {
-            s.Send(bytes);
-            s.Send(_bytesCrlf);
+            _s.Send(bytes);
+            _s.Send(_bytesCrlf);
         }
 
         public void Writeln(string str)

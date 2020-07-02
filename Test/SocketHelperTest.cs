@@ -22,7 +22,7 @@ namespace Test
         [TestMethod]
         public void TotalTest()
         {
-            FTPServer.StartServiceThread();
+            FtpServer.StartServiceThread();
             // while (true) { }
 
             var port = 21;
@@ -93,11 +93,11 @@ namespace Test
                     //地址:127.0.0.1 端口:211*256+82
 
                     // 创建数据连接
-                    IPEndPoint dataIPE = CommandHelper.AddressParser(line);
-                    Socket dataSocket = new Socket(dataIPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    IPEndPoint dataIpe = CommandHelper.AddressParser(line);
+                    Socket dataSocket = new Socket(dataIpe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     try
                     {
-                        dataSocket.Connect(dataIPE);
+                        dataSocket.Connect(dataIpe);
                     }
                     catch (Exception e)
                     {
@@ -144,11 +144,11 @@ namespace Test
                     Assert.AreEqual(status, 227);
 
                     // 创建数据连接
-                    dataIPE = CommandHelper.AddressParser(line);
-                    dataSocket = new Socket(dataIPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    dataIpe = CommandHelper.AddressParser(line);
+                    dataSocket = new Socket(dataIpe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     try
                     {
-                        dataSocket.Connect(dataIPE);
+                        dataSocket.Connect(dataIpe);
                     }
                     catch (Exception e)
                     {
@@ -185,11 +185,11 @@ namespace Test
                     Assert.AreEqual(status,227);
 
                     // 创建数据连接
-                    dataIPE = CommandHelper.AddressParser(line);
-                    dataSocket = new Socket(dataIPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    dataIpe = CommandHelper.AddressParser(line);
+                    dataSocket = new Socket(dataIpe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     try
                     {
-                        dataSocket.Connect(dataIPE);
+                        dataSocket.Connect(dataIpe);
                     }
                     catch (Exception e)
                     {

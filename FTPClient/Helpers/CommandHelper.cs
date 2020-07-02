@@ -13,11 +13,11 @@ namespace FTPClient.Helpers
         public static IPEndPoint AddressParser(string s)
         {
             var str = GetMiddleText(s, "(", ")");
-            var IPE = str.Split(',');
-            if (IPE.Length != 6)
+            var ipe = str.Split(',');
+            if (ipe.Length != 6)
                 throw new NotImplementedException();
-            var ip = IPAddress.Parse(string.Format("{0}.{1}.{2}.{3}", IPE[0], IPE[1], IPE[2], IPE[3]));
-            var port = Convert.ToInt32(IPE[4]) * 256 + Convert.ToInt32(IPE[5]);
+            var ip = IPAddress.Parse(string.Format("{0}.{1}.{2}.{3}", ipe[0], ipe[1], ipe[2], ipe[3]));
+            var port = Convert.ToInt32(ipe[4]) * 256 + Convert.ToInt32(ipe[5]);
             return new IPEndPoint(ip, port);
         }
 
