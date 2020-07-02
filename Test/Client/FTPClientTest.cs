@@ -1,18 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Net.Sockets;
-using System.Threading;
-using FTPClient.Client;
 using FTPClient.Helpers;
-using FubarDev.FtpServer;
-using FubarDev.FtpServer.FileSystem.DotNet;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Test
+namespace Test.Client
 {
     [TestClass]
     public class FTPClientTest

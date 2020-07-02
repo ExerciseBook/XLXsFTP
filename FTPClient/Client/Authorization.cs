@@ -1,4 +1,3 @@
-using System;
 using FTPClient.Helpers;
 
 namespace FTPClient.Client
