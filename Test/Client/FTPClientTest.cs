@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Client
 {
+    using FTPClient.Client;
+
     [TestClass]
     public class FTPClientTest
     {
