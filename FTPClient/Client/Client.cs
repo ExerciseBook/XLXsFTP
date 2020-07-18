@@ -53,7 +53,8 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="fileContentsBytes"></param>
-        public void Upload(string filename, byte[] fileContentsBytes)
+        /// <param name="offset"></param>
+        public void Upload(string filename, byte[] fileContentsBytes, int offset = 0)
         {
             string line;
             int status;
@@ -70,13 +71,23 @@ namespace FTPClient.Client
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
 
+            // REST 续传 => 350
+            _commandHelper.Writeln("REST " + offset);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 350) throw new FTPClientException(status, line);
+            
             // STOR 路径 => 150
             _commandHelper.Writeln("STOR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
 
+            byte[] tmp = new byte[1];
             // 上传
-            dataSocket.Send(fileContentsBytes);
+            for (int i = offset; i < fileContentsBytes.Length; i++)
+            {
+                tmp[0] = fileContentsBytes[i];
+                dataSocket.Send(tmp);
+            }
             dataSocket.Close();
 
             // 226 or 250
@@ -103,8 +114,9 @@ namespace FTPClient.Client
         /// 下载文件
         /// </summary>
         /// <param name="filename"></param>
+        /// <param name="offset"></param>
         /// <returns></returns>
-        public byte[] Download(string filename)
+        public byte[] Download(string filename, int offset = 0)
         {
             int status;
             string line;
@@ -124,6 +136,11 @@ namespace FTPClient.Client
 
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
+
+            // REST 续传 => 350
+            _commandHelper.Writeln("REST " + offset);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 350) throw new FTPClientException(status, line);
 
             // RETR 路径 => 150;
             _commandHelper.Writeln("RETR " + filename);
