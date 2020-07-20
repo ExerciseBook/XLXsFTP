@@ -101,7 +101,8 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
-        public async void Upload(string localPath, string remotePath)
+        /// <param name="offset"></param>
+        public async void Upload(string localPath, string remotePath, long offset = 0)
         {
             //TODO 来个好哥哥实现一下按照路径上传
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
@@ -165,7 +166,8 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
-        public async void Download(string localPath, string remotePath)
+        /// <param name="offset"></param>
+        public async void Download(string localPath, string remotePath, long offset = 0)
         {
             //TODO 来个好哥哥实现一下按照路径下载
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
