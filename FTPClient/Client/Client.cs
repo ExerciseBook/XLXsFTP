@@ -13,8 +13,6 @@ namespace FTPClient.Client
     /// </summary>
     public class Client
     {
-        //TODO 来个好哥哥把整个类里的东西都写成支持异步
-
         private readonly Socket _commandConnection;
         private readonly IPEndPoint _serverIpe;
         private readonly Authorization _authorization;
@@ -39,7 +37,7 @@ namespace FTPClient.Client
         /// <summary>
         /// 尝试连接服务器
         /// </summary>
-        public void Connect()
+        public async void Connect()
         {
             _commandConnection.Connect(_serverIpe);
 
@@ -49,6 +47,7 @@ namespace FTPClient.Client
 
             _authorization.Login();
         }
+
 
         /// <summary>
         /// 上传文件
@@ -102,7 +101,7 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
-        public void Upload(string localPath, string remotePath)
+        public async void Upload(string localPath, string remotePath)
         {
             //TODO 来个好哥哥实现一下按照路径上传
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
@@ -166,7 +165,7 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
-        public void Download(string localPath, string remotePath)
+        public async void Download(string localPath, string remotePath)
         {
             //TODO 来个好哥哥实现一下按照路径下载
             //就按照上面的那个函数依葫芦画瓢玩儿就好辣
