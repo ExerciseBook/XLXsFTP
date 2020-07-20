@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using FTPClient.Helpers;
@@ -109,7 +110,58 @@ namespace FTPClient.Client
             //请注意：在文件上传模式下，数据连接 和 指令连接 应当同时监听，在数据连接上传数据的时候，要监听指令连接是否有发来信息
             //文档 https://tools.ietf.org/html/rfc959 第 51 面
             //当然，Receive 的时候还要记得判断一下 Receive 的返回值是否大于零
-            throw new NotImplementedException();
+            string line;
+            int status;
+
+            // 使用被动模式
+            _commandHelper.Writeln("PASV");
+
+            // 读取服务器的响应信息
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+
+            // 判断状态码是否正常，不正常就进异常处理
+            if (status != 227) throw new FTPClientException(status, line);
+
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
+
+            // REST 续传 => 350
+            _commandHelper.Writeln("REST " + offset);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 350) throw new FTPClientException(status, line);
+
+            // STOR 路径 => 150
+            _commandHelper.Writeln("STOR " + remotePath);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 150) throw new FTPClientException(status, line);
+
+            byte[] fileContentsBytes;
+
+            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+            {
+                try
+                {
+                    fileContentsBytes = new byte[fs.Length];
+                    fs.Read(fileContentsBytes, 0, (int)fs.Length);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            byte[] tmp = new byte[1];
+            // 上传
+            for (long i = offset; i < fileContentsBytes.Length; i++)
+            {
+                tmp[0] = fileContentsBytes[i];
+                dataSocket.Send(tmp);
+            }
+            dataSocket.Close();
+
+            // 226 or 250
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if ((status != 226) && (status != 250)) throw new FTPClientException(status, line);
         }
 
         /// <summary>

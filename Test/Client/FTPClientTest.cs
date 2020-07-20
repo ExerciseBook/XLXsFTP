@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using FTPClient.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 
 namespace Test.Client
 {
@@ -27,6 +28,12 @@ namespace Test.Client
 
             // 随便生成个文件名
             string filename = "/" + Guid.NewGuid().ToString() + ".txt";
+            
+            // 本地文件路径
+            string localPath = "E:\\test.txt";
+
+            // 远程文件路径
+            string remotePath = "/" + Guid.NewGuid().ToString() + ".txt";
 
             // 随便生成个文件数据
             string fileContents = Guid.NewGuid().ToString() + "\r\n" + Guid.NewGuid().ToString();
@@ -34,6 +41,22 @@ namespace Test.Client
 
             // 计算一下长度待会儿用
             int filesize = fileContentsBytes.Length;
+
+            // 本地文件长度
+            long localFilesize = 0;
+            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+            {
+                try
+                {
+                    byte[] buff = new byte[fs.Length];
+                    fs.Read(buff, 0, (int)fs.Length);
+                    localFilesize = buff.Length;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +73,23 @@ namespace Test.Client
                 if (aFileInfo.FileName == filename.Substring(1))
                 {
                     Assert.AreEqual(filesize, aFileInfo.Size);
+                    flag = 1;
+                    break;
+                }
+            }
+            Assert.AreEqual(1, flag);
+
+            // 测试本地文件上传（路径上传）
+            TestUpload(client, localPath, remotePath);
+
+            // 测试目录列表
+            list = TestList(client, "/");
+            flag = 0;
+            foreach (var aFileInfo in list)
+            {
+                if (aFileInfo.FileName == remotePath.Substring(1))
+                {
+                    Assert.AreEqual(localFilesize, aFileInfo.Size);
                     flag = 1;
                     break;
                 }
@@ -81,6 +121,11 @@ namespace Test.Client
         private void TestUpload(Client client, string filename, byte[] fileContentsBytes)
         {
             client.Upload(filename, fileContentsBytes);
+        }
+
+        private void TestUpload(Client client, string localPath, string remotePath)
+        {
+            client.Upload(localPath, remotePath);
         }
 
         private byte[] TestDownload(Client client, string filename)
