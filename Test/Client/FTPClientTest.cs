@@ -37,15 +37,24 @@ namespace Test.Client
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////////
-            List<string> list;
-
+            List<FileInfo> list;
 
             // 测试文件上传
             TestUpload(client, filename, fileContentsBytes);
 
             // 测试目录列表
             list = TestList(client, "/");
-            //TODO 检查文件是否上传成功
+            int flag = 0;
+            foreach (var aFileInfo in list)
+            {
+                if (aFileInfo.FileName == filename.Substring(1))
+                {
+                    Assert.AreEqual(filesize, aFileInfo.Size);
+                    flag = 1;
+                    break;
+                }
+            }
+            Assert.AreEqual(1, flag);
 
             // 测试文件下载
             byte[] downloadedFile = TestDownload(client, filename);
@@ -56,7 +65,17 @@ namespace Test.Client
 
             // 测试文件列表
             TestList(client, "/");
-            //TODO 检查文件是否删除成功
+            flag = 0;
+            foreach (var aFileInfo in list)
+            {
+                if (aFileInfo.FileName == filename)
+                {
+                    flag = 1;
+                    break;
+                }
+            }
+            Assert.AreEqual(0, flag);
+
         }
 
         private void TestUpload(Client client, string filename, byte[] fileContentsBytes)
@@ -69,7 +88,7 @@ namespace Test.Client
             return client.Download(filename);
         }
 
-        private List<string> TestList(Client client, string s)
+        private List<FileInfo> TestList(Client client, string s)
         {
             return client.List(s);
         }

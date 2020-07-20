@@ -4,25 +4,16 @@ namespace FTPClient.Client
 {
     class Authorization
     {
-        private readonly string _username;
-        private readonly string _password;
         private readonly SocketHelper _socketHelper;
 
-        public string Username
-        {
-            get => _username;
-        }
+        public string Username { get; }
 
-        public string Password
-        {
-            get => _password;
-
-        }
+        public string Password { get; }
 
         public Authorization(string username, string password, SocketHelper socketHelper)
         {
-            this._username = username;
-            this._password = password;
+            this.Username = username;
+            this.Password = password;
 
             this._socketHelper = socketHelper;
         }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using FTPClient.Helpers;
@@ -188,7 +190,12 @@ namespace FTPClient.Client
             if (status != 250) throw new FTPClientException(status, line);
         }
 
-        public List<string> List(string path)
+        /// <summary>
+        /// 列出目录
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public List<FileInfo> List(string path)
         {
             int status;
             string line;
@@ -207,12 +214,11 @@ namespace FTPClient.Client
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
 
-            List<string> ret = new List<string>();
+            List<FileInfo> ret = new List<FileInfo>();
             do
             {
-                //TODO 来个好哥哥把这个 List<string> 更换为可读性更高的版本吧
                 line = System.Text.Encoding.UTF8.GetString(dataHelper.Readln());
-                if (line.Length > 0) ret.Add(line);
+                if (line.Length > 0) ret.Add(new FileInfo(line));
             } while (line.Length != 0);
 
             // 226 => 结束数据连接
