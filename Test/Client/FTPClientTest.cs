@@ -33,7 +33,7 @@ namespace Test.Client
             string localPath = "E:\\test.txt";
 
             // 远程文件路径
-            string remotePath = "/" + Guid.NewGuid().ToString() + ".txt";
+            string remotePath = "/" + "test.txt";
 
             // 随便生成个文件数据
             string fileContents = Guid.NewGuid().ToString() + "\r\n" + Guid.NewGuid().ToString();
@@ -41,22 +41,6 @@ namespace Test.Client
 
             // 计算一下长度待会儿用
             int filesize = fileContentsBytes.Length;
-
-            // 本地文件长度
-            long localFilesize = 0;
-            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
-            {
-                try
-                {
-                    byte[] buff = new byte[fs.Length];
-                    fs.Read(buff, 0, (int)fs.Length);
-                    localFilesize = buff.Length;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +66,23 @@ namespace Test.Client
             // 测试本地文件上传（路径上传）
             TestUpload(client, localPath, remotePath);
 
-            // 测试目录列表
+            // 本地文件长度
+            long localFilesize = 0;
+            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+            {
+                try
+                {
+                    byte[] buff = new byte[fs.Length];
+                    fs.Read(buff, 0, (int)fs.Length);
+                    localFilesize = buff.Length;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            // 测试目录列表（路径上传）
             list = TestList(client, "/");
             flag = 0;
             foreach (var aFileInfo in list)
@@ -99,6 +99,35 @@ namespace Test.Client
             // 测试文件下载
             byte[] downloadedFile = TestDownload(client, filename);
             Assert.AreEqual(System.Text.Encoding.UTF8.GetString(downloadedFile), fileContents);
+
+            // 测试文件下载（路径下载）
+            TestDownload(client, localPath, remotePath);
+
+            // 计算下载文件长度
+            long downloadFilesize = 0;
+            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+            {
+                try
+                {
+                    byte[] buff = new byte[fs.Length];
+                    fs.Read(buff, 0, (int)fs.Length);
+                    downloadFilesize = buff.Length;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+            // 测试文件是否一致（路径下载）
+            foreach (var aFileInfo in list)
+            {
+                if (aFileInfo.FileName == remotePath.Substring(1))
+                {
+                    Assert.AreEqual(downloadFilesize, aFileInfo.Size);
+                    break;
+                }
+            }
 
             // 测试文件删除
             TestDelete(client, filename);
@@ -131,6 +160,11 @@ namespace Test.Client
         private byte[] TestDownload(Client client, string filename)
         {
             return client.Download(filename);
+        }
+
+        private void TestDownload(Client client, string localPath, string remotePath)
+        {
+            client.Download(localPath, remotePath);
         }
 
         private List<FileInfo> TestList(Client client, string s)
