@@ -28,7 +28,9 @@ namespace FTPClient.Client
 
             public FileModifiedAt(string s, string s1, string s2)
             {
-                this._time = DateTime.Parse(s + ' ' + s1 + ' '+ s2);
+                this._time = s2.Contains(":")
+                    ? DateTime.Parse("" + this._now.Year + s + ' ' + s1 + ' ' + s2 + ':' + "00")
+                    : DateTime.Parse(s + ' ' + s1 + ' '+ s2);
             }
 
             public String ToString()
