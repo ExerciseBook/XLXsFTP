@@ -18,7 +18,6 @@ namespace Test.Client
         {
             FtpServer.StartServiceThread();
 
-
             IPEndPoint server = CommandHelper.AddressParser("(127,0,0,1,0,21)");
             Client client = new Client(server, "anonymous", "anonymous@example.com");
             client.Connect();
