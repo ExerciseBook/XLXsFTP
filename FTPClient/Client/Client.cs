@@ -105,11 +105,6 @@ namespace FTPClient.Client
         /// <param name="offset"></param>
         public async void Upload(string localPath, string remotePath, long offset = 0)
         {
-            //TODO 来个好哥哥实现一下按照路径上传
-            //就按照上面的那个函数依葫芦画瓢玩儿就好辣
-            //请注意：在文件上传模式下，数据连接 和 指令连接 应当同时监听，在数据连接上传数据的时候，要监听指令连接是否有发来信息
-            //文档 https://tools.ietf.org/html/rfc959 第 51 面
-            //当然，Receive 的时候还要记得判断一下 Receive 的返回值是否大于零
             string line;
             int status;
 
@@ -221,11 +216,6 @@ namespace FTPClient.Client
         /// <param name="offset"></param>
         public async void Download(string localPath, string remotePath, long offset = 0)
         {
-            //TODO 来个好哥哥实现一下按照路径下载
-            //就按照上面的那个函数依葫芦画瓢玩儿就好辣
-            //请注意：在文件上传模式下，数据连接 和 指令连接 应当同时监听，在数据连接上传数据的时候，要监听指令连接是否有发来信息
-            //文档 https://tools.ietf.org/html/rfc959 第 51 面
-            //当然，Receive 的时候还要记得判断一下 Receive 的返回值是否大于零
             int status;
             string line;
 
