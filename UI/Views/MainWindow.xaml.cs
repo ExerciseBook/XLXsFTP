@@ -1,7 +1,7 @@
 using System.Windows;
 using UI.Src.Walterlv;
 
-namespace UI
+namespace UI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -29,7 +29,7 @@ namespace Test.Client
             string filename = "/" + Guid.NewGuid().ToString() + ".txt";
             
             // 本地文件路径
-            string localPath = "E:\\test.txt";
+            string localPath = "D:\\test.txt";
 
             // 远程文件路径
             string remotePath = "/" + "test.txt";

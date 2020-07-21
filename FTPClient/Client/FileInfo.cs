@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace FTPClient.Client
 {
@@ -85,7 +86,8 @@ namespace FTPClient.Client
 
         public FileInfo(string line)
         {
-            string[] s = line.Split(' ', 9, StringSplitOptions.None);
+
+            string[] s = Regex.Split(line, "\\s+", RegexOptions.IgnoreCase);
             // -rwxrwxrwx 1 owner group 74 Jul 20 10:53 5ead33f1-6b54-4c31-ab1a-0427e9afa5c7.txt
 
             // 0 -rwxrwxrwx
