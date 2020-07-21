@@ -18,32 +18,41 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1px"/>
             <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1px"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" MaxHeight="10px"/>
+            <RowDefinition Height="1*" MaxHeight="32px"/>
             <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*" MaxHeight="8px"/>
         </Grid.RowDefinitions>
 
 
         <!--任务状态-->
-        <Grid Row="1" Column="0">
-            
+        <Grid Row="1" Column="0" >
+
         </Grid>
 
-        <!--本机-->
         <Grid Row="1" Column="1">
+            <Border BorderThickness="0.25" BorderBrush="White" />
+        </Grid>
+        
+        <!--本机-->
+        <Grid Row="1" Column="2">
+            <local:ResourceNavigation/>
+        </Grid>
 
+        <Grid Row="1" Column="3">
+            <Border BorderThickness="0.25" BorderBrush="White" />
         </Grid>
 
         <!--远程-->
-        <Grid Row="1" Column="2">
-
+        <Grid Row="1" Column="4">
+            <local:ResourceNavigation/>
         </Grid>
-
-
 
     </Grid>
 </Window>
