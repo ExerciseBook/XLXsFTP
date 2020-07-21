@@ -6,6 +6,9 @@ using UI.Walterlv.Native;
 
 namespace UI.Walterlv
 {
+    /// <summary>
+    /// Source https://blog.walterlv.com/post/win10/2017/10/02/wpf-transparent-blur-in-windows-10.html
+    /// </summary>
     public class WindowBlur
     {
         public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.RegisterAttached(

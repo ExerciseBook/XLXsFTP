@@ -5,14 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        Background="#30FFFFFF">
+
+        Title="XLXsFTP"
+        Height="450" Width="800"
+        MinHeight="450" MinWidth="800"
+        Background="#7FFFFFFF">
 
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1px"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="1px"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" MaxHeight="32px"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*" MaxHeight="8px"/>
+        </Grid.RowDefinitions>
+
+
+        <!--任务状态-->
+        <Grid Row="1" Column="0" >
+
+        </Grid>
+
+        <Grid Row="1" Column="1">
+            <Border BorderThickness="0.25" BorderBrush="White" />
+        </Grid>
         
+        <!--本机-->
+        <Grid Row="1" Column="2">
+            <local:ResourceNavigation/>
+        </Grid>
+
+        <Grid Row="1" Column="3">
+            <Border BorderThickness="0.25" BorderBrush="White" />
+        </Grid>
+
+        <!--远程-->
+        <Grid Row="1" Column="4">
+            <local:ResourceNavigation/>
+        </Grid>
+
     </Grid>
 </Window>
