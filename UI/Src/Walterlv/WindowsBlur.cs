@@ -2,9 +2,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using UI.Walterlv.Native;
+using UI.Src.Walterlv.Native;
 
-namespace UI.Walterlv
+namespace UI.Src.Walterlv
 {
     /// <summary>
     /// Source https://blog.walterlv.com/post/win10/2017/10/02/wpf-transparent-blur-in-windows-10.html

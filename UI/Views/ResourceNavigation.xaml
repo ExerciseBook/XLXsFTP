@@ -30,10 +30,10 @@
 
         <Grid Row="2" Column="0" ColumnSpan="3">
             <ListView Background="Transparent">
-                <ListViewItem>五桂山下</ListViewItem>
-                <ListViewItem>兰溪河畔</ListViewItem>
-                <ListViewItem>原野飘香</ListViewItem>
-                <ListViewItem>宛若天堂</ListViewItem>
+                <ListViewItem>Test</ListViewItem>
+                <ListViewItem>Test</ListViewItem>
+                <ListViewItem>Test</ListViewItem>
+                <ListViewItem>Test</ListViewItem>
             </ListView>
         </Grid>
         
