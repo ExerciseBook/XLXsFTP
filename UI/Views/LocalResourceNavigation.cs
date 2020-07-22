@@ -8,7 +8,7 @@ namespace UI.Views
     {
         public LocalResourceNavigation() : base()
         {
-            NavigationLabel.Text = @"D:\";
+            NavigationLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
         protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)

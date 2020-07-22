@@ -2,7 +2,7 @@ using System;
 
 namespace FTPClient.Client
 {
-    internal class FTPClientException : Exception
+    public class FTPClientException : Exception
     {
         private readonly int _status;
 

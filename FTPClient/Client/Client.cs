@@ -19,6 +19,8 @@ namespace FTPClient.Client
         private readonly Authorization _authorization;
         private readonly SocketHelper _commandHelper;
 
+        public bool Connected { get; private set; } = false;
+
         /// <summary>
         /// 创建客户端对象
         /// </summary>
@@ -38,15 +40,26 @@ namespace FTPClient.Client
         /// <summary>
         /// 尝试连接服务器
         /// </summary>
-        public async void Connect()
+        public void Connect()
         {
-            _commandConnection.Connect(_serverIpe);
+            try
+            {
+                _commandConnection.Connect(_serverIpe);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
 
             int status;
             String line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 220) throw new FTPClientException(status, line);
 
             _authorization.Login();
+
+            this.Connected = true;
         }
 
 
