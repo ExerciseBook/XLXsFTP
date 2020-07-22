@@ -29,9 +29,24 @@
             <Border BorderThickness="0.25" BorderBrush="White"/>
         </Grid>
 
-        <Grid Row="2" Column="0" ColumnSpan="3">
-            <ListView Background="Transparent" x:Name="NavigationList" BorderThickness="0"/>
+        <Grid Row="2" Column="0" ColumnSpan="2">
+            <ListView Background="Transparent" x:Name="NavigationList" 
+                      BorderThickness="0"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      ScrollViewer.ScrollChanged="NavigationList_OnScrollChanged"/>
         </Grid>
-        
+
+        <Grid Row="2" Column="2" x:Name="NavigationScrollBarBorder">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" MaxWidth="4px"/>
+                    <ColumnDefinition Width="1*" MaxWidth="2px"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Column="1" x:Name="NavigationScrollBar" VerticalAlignment="Top"/>
+            </Grid>
+        </Grid>
+
     </Grid>
 </UserControl>

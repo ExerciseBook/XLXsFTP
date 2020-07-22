@@ -9,19 +9,15 @@ namespace UI.Views
         public LocalResourceNavigation() : base()
         {
             NavigationLabel.Text = @"D:\";
-
-
-
-
         }
 
         protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             String path = NavigationLabel.Text;
-            DirectoryInfo folder = new DirectoryInfo(path);
-
             try
             {
+                DirectoryInfo folder = new DirectoryInfo(path);
+
                 NavigationList.Items.Clear();
 
                 foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
@@ -36,6 +32,12 @@ namespace UI.Views
 
             }
             catch (IOException exception)
+            {
+                NavigationList.Items.Clear();
+
+                NavigationList.Items.Add(exception.Message);
+            }
+            catch (ArgumentException exception)
             {
                 NavigationList.Items.Clear();
 
