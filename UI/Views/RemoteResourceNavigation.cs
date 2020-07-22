@@ -33,12 +33,12 @@ namespace UI.Views
             this._addressBox = new TextBox();
             this._addressBox.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             this._addressBox.BorderThickness = new Thickness(0);
-            this._addressBox.KeyDown += _addressBox_KeyDown;
+            this._addressBox.KeyDown += AddressBox_KeyDown;
 
             top.Children.Add(this._addressBox);
 
             // 建立框
-            this._loginView = new LoginView() { AddressBox = this._addressBox};
+            this._loginView = new LoginView(this, this._addressBox);
             bottom.Children.Add(this._loginView);
 
             // 写入默认地址
@@ -46,7 +46,7 @@ namespace UI.Views
             this._addressBox.Text = "ftp://anonymous:anonymous%40example.com@127.0.0.1/";
         }
 
-        private void _addressBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        public void AddressBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -64,9 +64,8 @@ namespace UI.Views
                 UInt16 port;
 
                 Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
-                return;
-                //TODO 解析 host:port 
-                //client = new Client(server, username, password);
+                IPEndPoint server = Helpers.Helper.ParseIPEndPoint(host, port);
+                client = new Client(server, username, password);
                 client.Connect();
 
                 this._addressBox.Visibility = Visibility.Hidden;

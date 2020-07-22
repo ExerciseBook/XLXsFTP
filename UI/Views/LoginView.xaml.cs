@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
+using System.Web;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace UI.Views
 {
@@ -9,11 +11,17 @@ namespace UI.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
-        public TextBox AddressBox { get; set; }
+        private readonly TextBox _addressBox;
+        private readonly RemoteResourceNavigation _remoteResourceNavigation;
 
-        public LoginView()
+        public LoginView(RemoteResourceNavigation remoteResourceNavigation, TextBox addressBox)
         {
             InitializeComponent();
+
+            this._addressBox = addressBox;
+            this._remoteResourceNavigation = remoteResourceNavigation;
+
+            TextBoxPassword.KeyDown += this._remoteResourceNavigation.AddressBox_KeyDown;
         }
 
         /// <summary>
@@ -49,12 +57,12 @@ namespace UI.Views
         {
             if (this.TryOccupied())
             {
-                AddressBox.Text = "ftp://";
-                if (!String.IsNullOrEmpty(TextBoxUsername.Text)) AddressBox.Text += TextBoxUsername.Text ;
-                if (!String.IsNullOrEmpty(TextBoxPassword.Text)) AddressBox.Text += ":" + TextBoxPassword.Text;
-                if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text)) AddressBox.Text += "@";
-                if (!String.IsNullOrEmpty(TextBoxHost.Text)) AddressBox.Text += TextBoxHost.Text;
-                if (!String.IsNullOrEmpty(TextBoxPath.Text)) AddressBox.Text += 
+                _addressBox.Text = "ftp://";
+                if (!String.IsNullOrEmpty(TextBoxUsername.Text)) _addressBox.Text += HttpUtility.UrlEncode(TextBoxUsername.Text);
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text)) _addressBox.Text += ":" + HttpUtility.UrlEncode(TextBoxPassword.Text);
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text)) _addressBox.Text += "@";
+                if (!String.IsNullOrEmpty(TextBoxHost.Text)) _addressBox.Text += TextBoxHost.Text;
+                if (!String.IsNullOrEmpty(TextBoxPath.Text)) _addressBox.Text += 
                     TextBoxPath.Text.StartsWith('/') ? TextBoxPath.Text : "/" + TextBoxPath.Text;
 
                 this.ReleaseOccupation();
@@ -65,14 +73,14 @@ namespace UI.Views
         {
             if (this.TryOccupied())
             {
-                String rawaddress = this.AddressBox.Text;
+                String rawaddress = this._addressBox.Text;
                 String username, password, defaultPath, host;
                 UInt16 port;
 
                 Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
 
-                TextBoxUsername.Text = username;
-                TextBoxPassword.Text = password;
+                TextBoxUsername.Text = HttpUtility.UrlDecode(username);
+                TextBoxPassword.Text = HttpUtility.UrlDecode(password);
                 TextBoxPath.Text = defaultPath;
                 TextBoxHost.Text = host + (port == 21 ? "" : ":" + port);
 

@@ -23,34 +23,35 @@
             <RowDefinition Height="2*" MaxHeight="32px"/>
         </Grid.RowDefinitions>
 
+
         <Grid Column="1" Row="1">
+            <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                     Background="Transparent" BorderThickness="0" IsEnabled="False">Host</TextBox>
+        </Grid>
+        <Grid Column="3" Row="1">
+            <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                     Background="#3FFFFFFF" BorderThickness="0"
+                     TextChanged="InputSyncToTop" x:Name="TextBoxHost"></TextBox>
+        </Grid>
+
+        <Grid Column="1" Row="2">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
                      Background="Transparent" BorderThickness="0" IsEnabled="False">Username</TextBox>
         </Grid>
-        <Grid Column="3" Row="1">
+        <Grid Column="3" Row="2">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
                      Background="#3FFFFFFF" BorderThickness="0"
                      TextChanged="InputSyncToTop" x:Name="TextBoxUsername"></TextBox>
         </Grid>
 
-        <Grid Column="1" Row="2">
-            <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                     Background="Transparent" BorderThickness="0" IsEnabled="False">Password</TextBox>
-        </Grid>
-        <Grid Column="3" Row="2">
-            <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                     Background="#3FFFFFFF" BorderThickness="0"
-                     TextChanged="InputSyncToTop" x:Name="TextBoxPassword"></TextBox>
-        </Grid>
-
         <Grid Column="1" Row="3">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                     Background="Transparent" BorderThickness="0" IsEnabled="False">Host</TextBox>
+                     Background="Transparent" BorderThickness="0" IsEnabled="False">Password</TextBox>
         </Grid>
         <Grid Column="3" Row="3">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
                      Background="#3FFFFFFF" BorderThickness="0"
-                     TextChanged="InputSyncToTop" x:Name="TextBoxHost"></TextBox>
+                     TextChanged="InputSyncToTop" x:Name="TextBoxPassword"></TextBox>
         </Grid>
 
         <Grid Column="1" Row="4" Visibility="Hidden">
@@ -62,8 +63,6 @@
                      Background="#3FFFFFFF" BorderThickness="0"
                      TextChanged="InputSyncToTop" x:Name="TextBoxPath"></TextBox>
         </Grid>
-
-
 
     </Grid>
 </UserControl>

@@ -85,5 +85,40 @@ namespace UI.Helpers
                 port = addr.Length == 2 ? UInt16.Parse(addr[1]) : (UInt16)21;
             }
         }
+
+        public static IPEndPoint ParseIPEndPoint(string host, ushort port)
+        {
+            IPEndPoint ret = null;
+
+            try
+            {
+                ret = IPEndPoint.Parse(host);
+                ret.Port = port;
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            if (ret != null) return ret;
+
+            try
+            {
+                IPAddress[] addresslist = Dns.GetHostAddresses(host);
+
+                foreach (IPAddress addr in addresslist)
+                {
+                    ret = new IPEndPoint(addr, port);
+                }
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+
+            if (ret != null) return ret;
+
+            throw new ArgumentException("IPEndPoint parsing failed.");
+        }
     }
 }
