@@ -130,28 +130,39 @@ namespace FTPClient.Client
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
 
-            // 读取文件字节
-            byte[] fileContentsBytes;
-            using (FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+            // 分段读取文件字节
+            byte[] buff = new byte[1024];
+            long buffsize = buff.Length;
+            long start = offset;
+            try
             {
-                try
+                FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read);
+                while (start < fs.Length)
                 {
-                    fileContentsBytes = new byte[fs.Length];
-                    fs.Read(fileContentsBytes, 0, (int)fs.Length);
+                    // 设置当前读取的起点
+                    fs.Position = start;
+
+                    // 读取一块文件
+                    int tot = fs.Read(buff, 0, (int)Math.Min(buffsize, fs.Length - start));
+
+                    byte[] tmp = new byte[1];
+                    // 上传
+                    for (long i = 0; i < tot; i++)
+                    {
+                        tmp[0] = buff[i];
+                        dataSocket.Send(tmp);
+                    }
+
+                    // 更新下一次读取的起点
+                    start += tot;
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
-            byte[] tmp = new byte[1];
-            // 上传
-            for (long i = offset; i < fileContentsBytes.Length; i++)
-            {
-                tmp[0] = fileContentsBytes[i];
-                dataSocket.Send(tmp);
-            }
+            // 关闭socket连接
             dataSocket.Close();
 
             // 226 or 250
