@@ -125,6 +125,9 @@ namespace FTPClient.Client
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
 
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
+
             // 分段读取文件字节
             byte[] buff = new byte[1024];
             long buffsize = buff.Length;
