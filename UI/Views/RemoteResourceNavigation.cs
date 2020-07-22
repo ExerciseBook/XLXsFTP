@@ -19,19 +19,31 @@ namespace UI.Views
         private Client client;
 
         private TextBox _addressBox;
+        private LoginView _loginView;
 
         public RemoteResourceNavigation() : base()
         {
+            Grid top = (Grid)NavigationLabel.Parent;
+            Grid bottom = (Grid)NavigationList.Parent;
+
+            // 隐藏地址栏
             NavigationLabel.Visibility = Visibility.Hidden;
 
+            // 建立登陆状态栏
             this._addressBox = new TextBox();
-            this._addressBox.Text = "ftp://anonymous:anonymous%40example.com@127.0.0.1/";
-            this._addressBox.Background = new SolidColorBrush(Color.FromArgb(0,0,0,0));
+            this._addressBox.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             this._addressBox.BorderThickness = new Thickness(0);
             this._addressBox.KeyDown += _addressBox_KeyDown;
 
-            ((Grid) NavigationLabel.Parent).Children.Add(this._addressBox);
+            top.Children.Add(this._addressBox);
 
+            // 建立框
+            this._loginView = new LoginView();
+            bottom.Children.Add(this._loginView);
+
+            // 写入默认地址
+            this._addressBox.TextChanged += this._loginView.InputSyncToBottom;
+            this._addressBox.Text = "ftp://anonymous:anonymous%40example.com@127.0.0.1/";
         }
 
         private void _addressBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
