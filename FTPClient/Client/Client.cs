@@ -154,6 +154,7 @@ namespace FTPClient.Client
                     // 更新下一次读取的起点
                     start += tot;
                 }
+                fs.Close();
             }
             catch (Exception ex)
             {
@@ -256,43 +257,40 @@ namespace FTPClient.Client
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
-            // 根据文件大小获取信息
-            byte[] file = new byte[fileSize];
-            dataSocket.Receive(file);
+            // 接收数据
+            long start = offset;
+            try
+            {
+                FileStream fs;
+                if (offset == 0) fs = new FileStream(localPath, FileMode.Create, FileAccess.Write);
+                else fs = new FileStream(localPath, FileMode.Append, FileAccess.Write);
+
+                while (start < fileSize)
+                {
+                    long buffsize = Math.Min(fileSize - start, 2);
+                    byte[] buff = new byte[buffsize];
+
+                    // 接收数据
+                    dataSocket.Receive(buff);
+
+                    // 写入本地文件
+                    fs.Write(buff, 0, buff.Length);
+
+                    start += buffsize;
+                }
+
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
 
             // 226 => 结束数据连接
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if ((status != 226) && (status != 250)) throw new FTPClientException(status, line);
             dataSocket.Close();
-
-            // 写入文件
-            if (offset == 0)
-            {
-                using (FileStream fs = new FileStream(localPath, FileMode.Create, FileAccess.Write))
-                {
-                    try
-                    {
-                        fs.Write(file, 0, file.Length);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
-            } else
-            {
-                using (FileStream fs = new FileStream(localPath, FileMode.Append, FileAccess.Write))
-                {
-                    try
-                    {
-                        fs.Write(file, 0, file.Length);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
-            }
 
         }
 
