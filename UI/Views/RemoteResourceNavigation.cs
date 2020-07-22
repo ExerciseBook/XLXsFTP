@@ -108,6 +108,7 @@ namespace UI.Views
 
             if (authorizationAddress.Contains('@'))
             {
+                // TODO 域名支持
                 string[] slicedAddress = authorizationAddress.Split('@', 2, StringSplitOptions.None);
                 server = IPEndPoint.Parse(slicedAddress[1]);
                 if (server.Port == 0) server.Port = 21;
@@ -131,6 +132,7 @@ namespace UI.Views
             else
             {
                 server = IPEndPoint.Parse(authorizationAddress);
+                if (server.Port == 0) server.Port = 21;
                 username = "anonymous";
                 password = "anonymous@example.com";
             }
