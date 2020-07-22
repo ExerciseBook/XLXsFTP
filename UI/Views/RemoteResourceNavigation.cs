@@ -60,11 +60,13 @@ namespace UI.Views
             try
             {
                 String rawaddress = this._addressBox.Text;
-                IPEndPoint server;
-                String username, password, defaultPath;
+                String username, password, defaultPath, host;
+                UInt16 port;
 
-                ParseAddress(rawaddress, out server, out username, out password, out defaultPath);
-                client = new Client(server, username, password);
+                Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+                return;
+                //TODO 解析 host:port 
+                //client = new Client(server, username, password);
                 client.Connect();
 
                 this._addressBox.Visibility = Visibility.Hidden;
@@ -91,69 +93,6 @@ namespace UI.Views
             }
 
         }
-
-        private void ParseAddress(string rawaddress, out IPEndPoint server, out string username, out string password, out string defaultPath)
-        {
-            string lowerAddress = rawaddress.ToLower();
-            if (!lowerAddress.StartsWith("ftp://")) throw new ArgumentException("Not start with \"ftp://\"");
-
-            /**
-             * 对于 URL 支持
-             *
-             * ftp://用户名:密码@目标服务器/默认路径
-             * ftp://目标服务器/默认路径
-             * ftp://用户名@目标服务器/默认路径
-             *
-             */
-            string subAddress = rawaddress.Substring(6);
-            string authorizationAddress;
-            if (subAddress.Contains('/'))
-            {
-                string[] slicedAddress = subAddress.Split('/', 2, StringSplitOptions.None);
-                defaultPath = slicedAddress[1];
-                authorizationAddress = slicedAddress[0];
-            }
-            else
-            {
-                defaultPath = "/";
-                authorizationAddress = subAddress;
-            }
-
-            if (authorizationAddress.Contains('@'))
-            {
-                // TODO 域名支持
-                string[] slicedAddress = authorizationAddress.Split('@', 2, StringSplitOptions.None);
-                server = IPEndPoint.Parse(slicedAddress[1]);
-                if (server.Port == 0) server.Port = 21;
-
-                string[] authorization = slicedAddress[0].Split(":");
-         
-                switch (authorization.Length)
-                {
-                    case 2:
-                        username = authorization[0];
-                        password = authorization[1];
-                        break;
-                    case 1:
-                        username = authorization[0];
-                        password = username + "@example.com";
-                        break;
-                    default:
-                        throw new ArgumentException("Authorization information format error.");
-                }
-            }
-            else
-            {
-                server = IPEndPoint.Parse(authorizationAddress);
-                if (server.Port == 0) server.Port = 21;
-                username = "anonymous";
-                password = "anonymous@example.com";
-            }
-
-            if (defaultPath == null || defaultPath == "") defaultPath = "/";
-
-        }
-
         protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             String Path = NavigationLabel.Text;

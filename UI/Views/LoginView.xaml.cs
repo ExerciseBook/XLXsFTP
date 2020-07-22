@@ -54,7 +54,9 @@ namespace UI.Views
                 if (!String.IsNullOrEmpty(TextBoxPassword.Text)) AddressBox.Text += ":" + TextBoxPassword.Text;
                 if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text)) AddressBox.Text += "@";
                 if (!String.IsNullOrEmpty(TextBoxHost.Text)) AddressBox.Text += TextBoxHost.Text;
-                if (!String.IsNullOrEmpty(TextBoxPath.Text)) AddressBox.Text += "/" + TextBoxPath.Text;
+                if (!String.IsNullOrEmpty(TextBoxPath.Text)) AddressBox.Text += 
+                    TextBoxPath.Text.StartsWith('/') ? TextBoxPath.Text : "/" + TextBoxPath.Text;
+
                 this.ReleaseOccupation();
             }
         }
@@ -63,6 +65,16 @@ namespace UI.Views
         {
             if (this.TryOccupied())
             {
+                String rawaddress = this.AddressBox.Text;
+                String username, password, defaultPath, host;
+                UInt16 port;
+
+                Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+
+                TextBoxUsername.Text = username;
+                TextBoxPassword.Text = password;
+                TextBoxPath.Text = defaultPath;
+                TextBoxHost.Text = host + (port == 21 ? "" : ":" + port);
 
                 this.ReleaseOccupation();
             }

@@ -42,16 +42,7 @@ namespace FTPClient.Client
         /// </summary>
         public void Connect()
         {
-            try
-            {
-                _commandConnection.Connect(_serverIpe);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
+            _commandConnection.Connect(_serverIpe);
 
             int status;
             String line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
