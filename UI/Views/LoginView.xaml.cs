@@ -9,6 +9,8 @@ namespace UI.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
+        public TextBox AddressBox { get; set; }
+
         public LoginView()
         {
             InitializeComponent();
@@ -47,9 +49,12 @@ namespace UI.Views
         {
             if (this.TryOccupied())
             {
-                
-
-
+                AddressBox.Text = "ftp://";
+                if (!String.IsNullOrEmpty(TextBoxUsername.Text)) AddressBox.Text += TextBoxUsername.Text ;
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text)) AddressBox.Text += ":" + TextBoxPassword.Text;
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text)) AddressBox.Text += "@";
+                if (!String.IsNullOrEmpty(TextBoxHost.Text)) AddressBox.Text += TextBoxHost.Text;
+                if (!String.IsNullOrEmpty(TextBoxPath.Text)) AddressBox.Text += "/" + TextBoxPath.Text;
                 this.ReleaseOccupation();
             }
         }

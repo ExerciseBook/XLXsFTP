@@ -38,7 +38,7 @@ namespace UI.Views
             top.Children.Add(this._addressBox);
 
             // 建立框
-            this._loginView = new LoginView();
+            this._loginView = new LoginView() { AddressBox = this._addressBox};
             bottom.Children.Add(this._loginView);
 
             // 写入默认地址
@@ -69,6 +69,7 @@ namespace UI.Views
 
                 this._addressBox.Visibility = Visibility.Hidden;
                 NavigationLabel.Visibility = Visibility.Visible;
+                this._loginView.Visibility = Visibility.Hidden;
 
                 NavigationLabel.Text = defaultPath;
             }
@@ -172,6 +173,7 @@ namespace UI.Views
             {
                 NavigationLabel.Visibility = Visibility.Hidden;
                 this._addressBox.Visibility = Visibility.Visible;
+                this._loginView.Visibility = Visibility.Visible;
 
                 NavigationList.Items.Clear();
 
