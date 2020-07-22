@@ -21,7 +21,8 @@
         </Grid.ColumnDefinitions>
 
         <Grid Row="0" Column="1">
-            <Label x:Name="NavigationLabel" />
+            <TextBox x:Name="NavigationLabel" Background="Transparent" BorderThickness="0"
+                     TextChanged="NavigationLabel_OnTextChanged"/>
         </Grid>
 
         <Grid Row="1" Column="1">
@@ -29,7 +30,7 @@
         </Grid>
 
         <Grid Row="2" Column="0" ColumnSpan="3">
-            <ListView Background="Transparent" x:Name="NavigationList"/>
+            <ListView Background="Transparent" x:Name="NavigationList" BorderThickness="0"/>
         </Grid>
         
     </Grid>

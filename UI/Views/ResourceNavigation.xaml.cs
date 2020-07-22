@@ -11,5 +11,7 @@ namespace UI.Views
         {
             InitializeComponent();
         }
+
+        protected abstract void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e);
     }
 }

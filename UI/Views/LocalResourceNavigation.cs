@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Windows.Controls;
 
 namespace UI.Views
 {
@@ -7,21 +8,40 @@ namespace UI.Views
     {
         public LocalResourceNavigation() : base()
         {
-            NavigationLabel.Content = this.GetType().ToString();
+            NavigationLabel.Text = @"D:\";
 
 
-            String path = @"D:\\";
+
+
+        }
+
+        protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            String path = NavigationLabel.Text;
             DirectoryInfo folder = new DirectoryInfo(path);
 
-            foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+            try
             {
-                NavigationList.Items.Add("/" + Directory.Name);
+                NavigationList.Items.Clear();
+
+                foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+                {
+                    NavigationList.Items.Add("/" + Directory.Name);
+                }
+
+                foreach (FileInfo file in folder.GetFiles("*.*"))
+                {
+                    NavigationList.Items.Add(file.Name);
+                }
+
+            }
+            catch (IOException exception)
+            {
+                NavigationList.Items.Clear();
+
+                NavigationList.Items.Add(exception.Message);
             }
 
-            foreach (FileInfo file in folder.GetFiles("*.*"))
-            {
-                NavigationList.Items.Add(file.Name);
-            }
         }
     }
 }

@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Windows.Controls;
 using FTPClient.Client;
 using FTPClient.Helpers;
+using FileInfo = FTPClient.Client.FileInfo;
 
 namespace UI.Views
 {
@@ -11,19 +15,35 @@ namespace UI.Views
 
         public RemoteResourceNavigation() : base()
         {
-            NavigationLabel.Content = this.GetType().ToString();
-            
             IPEndPoint server = CommandHelper.AddressParser("(127,0,0,1,0,21)");
             client = new Client(server, "anonymous", "anonymous@example.com");
             client.Connect();
 
-            List<FileInfo> t = client.List("/");
-            foreach (FileInfo fileInfo in t)
+            NavigationLabel.Text = "/";
+        }
+
+        protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            String Path = NavigationLabel.Text;
+            
+            try
             {
-                NavigationList.Items.Add( (fileInfo.IsFolder ? "/" : "") + fileInfo.FileName);
+                List<FileInfo> t = client.List(Path);
+
+                NavigationList.Items.Clear();
+
+                foreach (FileInfo fileInfo in t)
+                {
+                    NavigationList.Items.Add((fileInfo.IsFolder ? "/" : "") + fileInfo.FileName);
+                }
+            }
+            catch (Exception exception)
+            {
+                NavigationList.Items.Clear();
+
+                NavigationList.Items.Add(exception.Message);
             }
 
         }
-
     }
 }
