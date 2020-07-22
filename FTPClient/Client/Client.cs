@@ -19,6 +19,8 @@ namespace FTPClient.Client
         private readonly Authorization _authorization;
         private readonly SocketHelper _commandHelper;
 
+        public bool Connected { get; private set; } = false;
+
         /// <summary>
         /// 创建客户端对象
         /// </summary>
@@ -38,7 +40,7 @@ namespace FTPClient.Client
         /// <summary>
         /// 尝试连接服务器
         /// </summary>
-        public async void Connect()
+        public void Connect()
         {
             _commandConnection.Connect(_serverIpe);
 
@@ -47,6 +49,8 @@ namespace FTPClient.Client
             if (status != 220) throw new FTPClientException(status, line);
 
             _authorization.Login();
+
+            this.Connected = true;
         }
 
 
@@ -63,15 +67,9 @@ namespace FTPClient.Client
 
             // 使用被动模式
             _commandHelper.Writeln("PASV");
-
-            // 读取服务器的响应信息
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-
-            // 判断状态码是否正常，不正常就进异常处理
             if (status != 227) throw new FTPClientException(status, line);
-
-            // 创建数据连接
-            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
+            string dataConnection = line;
 
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
@@ -82,6 +80,9 @@ namespace FTPClient.Client
             _commandHelper.Writeln("STOR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
+
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
             byte[] tmp = new byte[1];
             // 上传
@@ -110,15 +111,9 @@ namespace FTPClient.Client
 
             // 使用被动模式
             _commandHelper.Writeln("PASV");
-
-            // 读取服务器的响应信息
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-
-            // 判断状态码是否正常，不正常就进异常处理
             if (status != 227) throw new FTPClientException(status, line);
-
-            // 创建数据连接
-            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
+            string dataConnection = line;
 
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
@@ -181,6 +176,12 @@ namespace FTPClient.Client
             int status;
             string line;
 
+            // PASV => 227;
+            _commandHelper.Writeln("PASV");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 227) throw new FTPClientException(status, line);
+            string dataConnection = line;
+
             // 尝试下载文件
             // SIZE 路径 => 213 文件大小;
             _commandHelper.Writeln("SIZE " + filename);
@@ -188,14 +189,6 @@ namespace FTPClient.Client
             if (status != 213) throw new FTPClientException(status, line);
 
             int fileSize = Int32.Parse(line.Split(' ')[1]);
-
-            // PASV => 227;
-            _commandHelper.Writeln("PASV");
-            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 227) throw new FTPClientException(status, line);
-
-            // 创建数据连接
-            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
 
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
@@ -206,6 +199,9 @@ namespace FTPClient.Client
             _commandHelper.Writeln("RETR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
+
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
             // 根据文件大小获取信息
             byte[] file = new byte[fileSize];
@@ -230,6 +226,12 @@ namespace FTPClient.Client
             int status;
             string line;
 
+            // PASV => 227;
+            _commandHelper.Writeln("PASV");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 227) throw new FTPClientException(status, line);
+            string dataConnection = line;
+
             // 尝试下载文件
             // SIZE 路径 => 213 文件大小;
             _commandHelper.Writeln("SIZE " + remotePath);
@@ -237,14 +239,6 @@ namespace FTPClient.Client
             if (status != 213) throw new FTPClientException(status, line);
 
             int fileSize = Int32.Parse(line.Split(' ')[1]);
-
-            // PASV => 227;
-            _commandHelper.Writeln("PASV");
-            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 227) throw new FTPClientException(status, line);
-
-            // 创建数据连接
-            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
 
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
@@ -255,6 +249,9 @@ namespace FTPClient.Client
             _commandHelper.Writeln("RETR " + remotePath);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
+            
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
             // 根据文件大小获取信息
             byte[] file = new byte[fileSize];
@@ -324,16 +321,18 @@ namespace FTPClient.Client
             _commandHelper.Writeln("PASV");
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 227) throw new FTPClientException(status, line);
+            string dataConnection = line;
 
-
-            // 创建数据连接
-            Socket dataSocket = CommandHelper.AddressParserAndConnect(line);
-            SocketHelper dataHelper = new SocketHelper(dataSocket);
-
+            // 执行指令
             _commandHelper.Writeln("LIST " + path);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
+            
+            // 创建数据连接
+            Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
+            SocketHelper dataHelper = new SocketHelper(dataSocket);
 
+            // 列出信息
             List<FileInfo> ret = new List<FileInfo>();
             do
             {
@@ -343,7 +342,7 @@ namespace FTPClient.Client
 
             // 226 => 结束数据连接
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if  (status != 250) throw new FTPClientException(status, line);
+            if ((status != 226) && (status != 250)) throw new FTPClientException(status, line);
             dataSocket.Close();
 
             return ret;

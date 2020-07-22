@@ -37,7 +37,7 @@ namespace FTPClient.Client
 
             _socketHelper.Writeln("OPTS UTF8 ON");
             line = System.Text.Encoding.UTF8.GetString(_socketHelper.Readln(out status));
-            if (status != 200) throw new FTPClientException(status, line);
+            // if (status != 200) throw new FTPClientException(status, line);
 
             _socketHelper.Writeln("PWD");
             line = System.Text.Encoding.UTF8.GetString(_socketHelper.Readln(out status));
