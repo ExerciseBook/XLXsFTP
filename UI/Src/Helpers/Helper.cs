@@ -70,10 +70,18 @@ namespace UI.Helpers
             {
                 string[] addr = address.Split("]:");
 
-                if (addr.Length > 2) throw new ArgumentException("Host format error");
-
-                host = addr[0] + "]";
-                port = addr.Length == 2 ? UInt16.Parse(addr[1]) : (UInt16)21;
+                switch (addr.Length)
+                {
+                    case 2:
+                        host = addr[0] + "]";
+                        port = UInt16.Parse(addr[1]);
+                        break;
+                    case 1:
+                        host = addr[0];
+                        port = 21;
+                        break;
+                    default: throw new ArgumentException("Host format error");
+                }
             }
             else
             {

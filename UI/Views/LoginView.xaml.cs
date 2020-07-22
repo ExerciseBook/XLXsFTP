@@ -73,16 +73,23 @@ namespace UI.Views
         {
             if (this.TryOccupied())
             {
-                String rawaddress = this._addressBox.Text;
-                String username, password, defaultPath, host;
-                UInt16 port;
+                try
+                {
+                    String rawaddress = this._addressBox.Text;
+                    String username, password, defaultPath, host;
+                    UInt16 port;
 
-                Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+                    Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
 
-                TextBoxUsername.Text = HttpUtility.UrlDecode(username);
-                TextBoxPassword.Text = HttpUtility.UrlDecode(password);
-                TextBoxPath.Text = defaultPath;
-                TextBoxHost.Text = host + (port == 21 ? "" : ":" + port);
+                    TextBoxUsername.Text = HttpUtility.UrlDecode(username);
+                    TextBoxPassword.Text = HttpUtility.UrlDecode(password);
+                    TextBoxPath.Text = defaultPath;
+                    TextBoxHost.Text = host + (port == 21 ? "" : ":" + port);
+                }
+                catch (Exception exception)
+                {
+                    // ignore
+                }
 
                 this.ReleaseOccupation();
             }
