@@ -15,9 +15,9 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="16px"/>
+            <ColumnDefinition Width="1*" MaxWidth="12px"/>
             <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="1*" MaxWidth="16px"/>
+            <ColumnDefinition Width="1*" MaxWidth="12px"/>
         </Grid.ColumnDefinitions>
 
         <Grid Row="0" Column="1">

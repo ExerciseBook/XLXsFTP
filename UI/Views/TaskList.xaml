@@ -1,0 +1,38 @@
+<UserControl x:Class="UI.Views.TaskList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="100">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MaxWidth="8px"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="1*" MaxWidth="8px"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Row="0" Column="1">
+            <ListView Background="Transparent"
+                      BorderThickness="0"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+
+                <local:TransmitTask/>
+            </ListView>
+        </Grid>
+
+  
+    </Grid>
+</UserControl>

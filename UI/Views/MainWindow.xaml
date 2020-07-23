@@ -34,7 +34,7 @@
 
         <!--任务状态-->
         <Grid Row="1" Column="0" >
-
+            <views:TaskList/>
         </Grid>
 
         <Grid Row="1" Column="1">
