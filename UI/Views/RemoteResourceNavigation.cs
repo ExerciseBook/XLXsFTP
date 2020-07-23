@@ -20,6 +20,14 @@ namespace UI.Views
 
         public RemoteResourceNavigation() : base()
         {
+            NavigationList.Items.Add(new ResourceItem());
+            NavigationList.Items.Add(new ResourceItem());
+            NavigationList.Items.Add(new ResourceItem());
+            NavigationList.Items.Add(new ResourceItem());
+            NavigationList.Items.Add(new ResourceItem());
+            NavigationList.Items.Add(new ResourceItem());
+
+
             Grid top = (Grid)NavigationLabel.Parent;
             Grid bottom = (Grid)NavigationList.Parent;
 

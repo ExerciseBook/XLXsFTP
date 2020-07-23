@@ -34,7 +34,13 @@
             <ListView Background="Transparent" x:Name="NavigationList" 
                       BorderThickness="0"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                      ScrollViewer.ScrollChanged="NavigationList_OnScrollChanged"/>
+                      ScrollViewer.ScrollChanged="NavigationList_OnScrollChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </Grid>
 
         <Grid Row="2" Column="2" x:Name="NavigationScrollBarBorder"
