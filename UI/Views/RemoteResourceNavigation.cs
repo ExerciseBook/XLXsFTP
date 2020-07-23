@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -142,6 +143,11 @@ namespace UI.Views
                 NavigationList.Items.Add(exception.GetType().ToString());
                 NavigationList.Items.Add(exception.Message);
             }
+
+        }
+
+        public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
 
         }
     }

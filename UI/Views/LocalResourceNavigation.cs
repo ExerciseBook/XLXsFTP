@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace UI.Views
@@ -48,6 +49,16 @@ namespace UI.Views
                 NavigationList.Items.Add(exception.Message);
             }
 
+        }
+
+        public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            foreach (var anItem in NavigationList.SelectedItems)
+            {
+                if (anItem is ResourceItem t)
+                {
+                }
+            };
         }
     }
 }

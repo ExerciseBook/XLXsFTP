@@ -79,6 +79,6 @@ namespace UI.Views
             NavigationList.ScrollIntoView(NavigationList.Items[idx]);
 
         }
-
+        public abstract void MenuItem_OnClick(object sender, RoutedEventArgs e);
     }
 }

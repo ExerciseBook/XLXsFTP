@@ -41,6 +41,11 @@
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Transmit" Click="MenuItem_OnClick" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
         </Grid>
 
