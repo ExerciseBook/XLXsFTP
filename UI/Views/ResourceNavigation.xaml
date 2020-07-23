@@ -45,7 +45,10 @@
         </Grid>
 
         <Grid Row="2" Column="2" x:Name="NavigationScrollBarBorder"
-              MouseDown="NavigationScrollBar_MouseDown" Background="Transparent">
+              Background="Transparent"
+              MouseLeftButtonDown="NavigationScrollBar_MouseDown"
+              MouseLeftButtonUp="NavigationScrollBar_MouseUp"
+              MouseMove="NavigationScrollBar_MouseMove">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" MaxWidth="4px"/>

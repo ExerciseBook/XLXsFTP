@@ -45,7 +45,27 @@ namespace UI.Views
 
         }
 
+        private int _scrollStatus = 0;
+
+        private void NavigationScrollBar_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this._scrollStatus = 0;
+        }
+
         private void NavigationScrollBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this._scrollStatus = 1;
+            this.Scroll(sender, e);
+        }
+
+        private void NavigationScrollBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (this._scrollStatus == 0) return;
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+            this.Scroll(sender, e);
+        }
+
+        private void Scroll(object sender, MouseEventArgs e)
         {
             if (NavigationList.Items.Count == 0) return;
 
@@ -54,10 +74,11 @@ namespace UI.Views
 
             double precent = p.Y / height;
 
-            int idx = (int) (NavigationList.Items.Count * precent);
+            int idx = (int)(NavigationList.Items.Count * precent);
             idx = NavigationList.Items.Count == idx ? idx - 1 : idx;
             NavigationList.ScrollIntoView(NavigationList.Items[idx]);
 
         }
+
     }
 }
