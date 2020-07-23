@@ -14,28 +14,31 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MaxWidth="1px"/>
-            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="32*"/>
             <ColumnDefinition Width="1*" MaxWidth="1px"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="8*" MinWidth="64px"/>
             <ColumnDefinition Width="1*" MaxWidth="1px"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="8*" MinWidth="112px"/>
             <ColumnDefinition Width="1*" MaxWidth="1px"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Row="1" Column="1">
-            <Label>Test.txt</Label>
+        <Grid Row="1" Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridFileName">
+            <Grid>
+                <Label x:Name="LabelFileName"/>
+            </Grid>
         </Grid>
 
-        <Grid Row="1" Column="3">
-            <Label>11.4G</Label>
+        <Grid Row="1" Column="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridSize">
+            <Grid>
+                <Label x:Name="LabelSize"/>
+            </Grid>
         </Grid>
 
-        <Grid Row="1" Column="5">
-            <Label>Yesterday</Label>
+        <Grid Row="1" Column="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridModifiedTime">
+            <Grid>
+                <Label x:Name="LabelModifiedTime"/>
+            </Grid>
         </Grid>
-
-
-        
 
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows;
@@ -20,14 +21,6 @@ namespace UI.Views
 
         public RemoteResourceNavigation() : base()
         {
-            NavigationList.Items.Add(new ResourceItem());
-            NavigationList.Items.Add(new ResourceItem());
-            NavigationList.Items.Add(new ResourceItem());
-            NavigationList.Items.Add(new ResourceItem());
-            NavigationList.Items.Add(new ResourceItem());
-            NavigationList.Items.Add(new ResourceItem());
-
-
             Grid top = (Grid)NavigationLabel.Parent;
             Grid bottom = (Grid)NavigationList.Parent;
 
@@ -100,17 +93,25 @@ namespace UI.Views
         }
         protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            String Path = NavigationLabel.Text;
+            String path = NavigationLabel.Text;
 
             try
             {
-                List<FileInfo> t = client.List(Path);
+                List<FileInfo> t = client.List(path);
 
                 NavigationList.Items.Clear();
 
                 foreach (FileInfo fileInfo in t)
                 {
-                    NavigationList.Items.Add((fileInfo.IsFolder ? "/" : "") + fileInfo.FileName);
+                    NavigationList.Items.Add(new ResourceItem(
+                        fileInfo.IsFolder ? 1 : 0, 
+                        Path.Join(path, fileInfo.FileName),
+                        fileInfo.FileName,
+                        fileInfo.Size,
+                        fileInfo.ModifiedAt.ToString()
+                        ));
+
+                    //NavigationList.Items.Add((fileInfo.IsFolder ? "/" : "") + fileInfo.FileName);
                 }
             }
             catch (SocketException exception)

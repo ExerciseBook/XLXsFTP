@@ -22,12 +22,14 @@ namespace UI.Views
 
                 foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
                 {
-                    NavigationList.Items.Add("/" + Directory.Name);
+                    //NavigationList.Items.Add("/" + Directory.Name);
+                    NavigationList.Items.Add(new ResourceItem(1, Directory.FullName, Directory.Name, 0, Helpers.Helper.FileDateTimeFormat(Directory.LastWriteTime)));
                 }
 
                 foreach (FileInfo file in folder.GetFiles("*.*"))
                 {
-                    NavigationList.Items.Add(file.Name);
+                    //NavigationList.Items.Add(file.Name);
+                    NavigationList.Items.Add(new ResourceItem(0, file.FullName, file.Name, file.Length, Helpers.Helper.FileDateTimeFormat(file.LastWriteTime)));
                 }
 
             }
