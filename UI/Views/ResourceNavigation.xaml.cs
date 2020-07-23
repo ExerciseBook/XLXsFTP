@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace UI.Views
@@ -37,6 +38,18 @@ namespace UI.Views
 
             NavigationScrollBar.Height = NavigationScrollBarBorder.ActualHeight * process;
             NavigationScrollBar.Background = new SolidColorBrush(Color.FromArgb((byte)(0xFF * process), 0, 0, 0));
+        }
+
+        private void NavigationScrollBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (NavigationList.Items.Count == 0) return;
+
+            Point p = e.GetPosition(NavigationScrollBarBorder);
+            double height = NavigationScrollBarBorder.ActualHeight;
+
+            double precent = p.Y / height;
+
+            NavigationList.ScrollIntoView(NavigationList.Items[ (int)(NavigationList.Items.Count * precent) ]);
         }
     }
 }

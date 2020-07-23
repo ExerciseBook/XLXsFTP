@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using FTPClient.Client;
-using FTPClient.Helpers;
 using FileInfo = FTPClient.Client.FileInfo;
 
 namespace UI.Views
@@ -33,6 +30,7 @@ namespace UI.Views
             this._addressBox = new TextBox();
             this._addressBox.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             this._addressBox.BorderThickness = new Thickness(0);
+            this._addressBox.VerticalAlignment = VerticalAlignment.Bottom;
             this._addressBox.KeyDown += AddressBox_KeyDown;
 
             top.Children.Add(this._addressBox);
