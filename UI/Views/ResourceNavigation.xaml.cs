@@ -26,11 +26,6 @@ namespace UI.Views
 
             process = dVer / (dExtent - dViewport);
             
-
-
-
-
-
             if (dVer == 0 && dViewport == dExtent && process >= 1)
             {
                 NavigationScrollBar.Visibility = Visibility.Hidden;

@@ -56,7 +56,7 @@
 
         <Grid Column="1" Row="4" Visibility="Hidden">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                     Background="Transparent" BorderThickness="0" IsEnabled="False">Path</TextBox>
+                     Background="Transparent" BorderThickness="0" IsEnabled="False">FilePath</TextBox>
         </Grid>
         <Grid Column="3" Row="4" Visibility="Hidden">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"

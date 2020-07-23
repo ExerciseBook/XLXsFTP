@@ -94,6 +94,8 @@ namespace UI.Views
         protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             String path = NavigationLabel.Text;
+            if (String.IsNullOrEmpty(path)) path = "/";
+            if (path[path.Length - 1] != '/') path += '/';
 
             try
             {
@@ -101,11 +103,14 @@ namespace UI.Views
 
                 NavigationList.Items.Clear();
 
+                NavigationList.Items.Add(new ResourceItem(NavigationLabel, 4, path, "../", 0, ""));
+
                 foreach (FileInfo fileInfo in t)
                 {
                     NavigationList.Items.Add(new ResourceItem(
+                        NavigationLabel,
                         fileInfo.IsFolder ? 1 : 0, 
-                        Path.Join(path, fileInfo.FileName),
+                        path + fileInfo.FileName,
                         fileInfo.FileName,
                         fileInfo.Size,
                         fileInfo.ModifiedAt.ToString()

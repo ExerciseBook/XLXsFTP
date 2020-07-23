@@ -1,16 +1,7 @@
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace UI.Views
 {
@@ -19,24 +10,15 @@ namespace UI.Views
     /// </summary>
     public partial class ResourceItem : UserControl
     {
-        private int _type;
-        private string _path;
         private string _fileName;
         private long _size;
         private string _modifiedTime;
+        private readonly TextBox _navigationLavel;
 
 
-        public int Type
-        {
-            get => this._type ;
-            private set => this._type = value;
-        }
+        public int Type { get; private set; }
 
-        public string Path
-        {
-            get => this._path;
-            private set => this._path = value;
-        }
+        public string FilePath { get; private set; }
 
         public string FileName
         {
@@ -69,22 +51,68 @@ namespace UI.Views
             }
         }
         
-        public ResourceItem(int type, string path, string fileName, long size, string modifiedTime)
+        public ResourceItem(TextBox navigationLabel, int type, string filePath, string fileName, long size,
+            string modifiedTime)
         {
             InitializeComponent();
 
-            if (type == 1)
+            switch (type)
             {
-                Grid.SetColumnSpan(GridFileName, 3);
-                GridSize.Visibility = Visibility.Hidden;
+                case 1:
+                    Grid.SetColumnSpan(GridFileName, 3);
+                    GridSize.Visibility = Visibility.Hidden;
+                    break;
+                case 2:
+                    GridSize.Visibility = Visibility.Hidden;
+                    GridModifiedTime.Visibility = Visibility.Hidden;
+                    break;
+                case 4:
+                    GridSize.Visibility = Visibility.Hidden;
+                    GridModifiedTime.Visibility = Visibility.Hidden;
+                    break;
             }
 
+            this._navigationLavel = navigationLabel;
             this.Type = type;
-            this.Path = path;
+            this.FilePath = filePath;
             this.FileName = fileName;
             this.Size = size;
             this.ModifiedTime = modifiedTime;
+
+            this.MouseDoubleClick += ResourceItem_MouseDoubleClick;
         }
 
+        private void ResourceItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            switch (this.Type)
+            {
+                case 1:
+                    this._navigationLavel.Text = this.FilePath;
+                    break;
+                case 2:
+                    try
+                    {
+                        this._navigationLavel.Text = (System.IO.Directory.GetParent(this.FilePath))?.FullName;
+                    }
+                    catch (Exception exception)
+                    {
+                        // ignore
+                    }
+                    break;
+                case 4:
+                    string nowPath = this.FilePath;
+
+                    while (nowPath.EndsWith('/')) nowPath = nowPath.Substring(0, nowPath.Length - 1);
+                    if (String.IsNullOrEmpty(nowPath)) break;
+
+                    int aidx = nowPath.LastIndexOf('/');
+                    int bidx = nowPath.LastIndexOf('\\');
+                    int idx = Math.Min( aidx == -1 ? Int32.MaxValue : aidx, bidx == -1 ? Int32.MaxValue : bidx);
+                    string newPath = nowPath.Substring(0, idx);
+                    if (String.IsNullOrEmpty(newPath)) newPath = "/";
+                    this._navigationLavel.Text = newPath;
+                    break;
+            }
+        }
     }
 }
