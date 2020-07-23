@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Web;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace UI.Views
 {

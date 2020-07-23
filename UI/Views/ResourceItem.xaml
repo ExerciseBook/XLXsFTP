@@ -1,0 +1,44 @@
+<UserControl x:Class="UI.Views.ResourceItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="32" d:DesignWidth="350">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" MaxHeight="1px"/>
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MaxWidth="1px"/>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="1*" MaxWidth="1px"/>
+            <ColumnDefinition Width="8*" MinWidth="64px"/>
+            <ColumnDefinition Width="1*" MaxWidth="1px"/>
+            <ColumnDefinition Width="8*" MinWidth="112px"/>
+            <ColumnDefinition Width="1*" MaxWidth="1px"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Row="1" Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridFileName">
+            <Grid>
+                <Label x:Name="LabelFileName"/>
+            </Grid>
+        </Grid>
+
+        <Grid Row="1" Column="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridSize">
+            <Grid>
+                <Label x:Name="LabelSize"/>
+            </Grid>
+        </Grid>
+
+        <Grid Row="1" Column="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridModifiedTime">
+            <Grid>
+                <Label x:Name="LabelModifiedTime"/>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>

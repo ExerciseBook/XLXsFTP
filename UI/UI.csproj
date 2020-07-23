@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\ResourceNavigation.xaml~RF858844d.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FTPClient\FTPClient.csproj" />
   </ItemGroup>
 
