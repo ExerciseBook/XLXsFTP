@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows;
@@ -10,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FTPClient.Client;
 using FileInfo = FTPClient.Client.FileInfo;
+using Path = System.IO.Path;
 
 namespace UI.Views
 {
@@ -152,7 +151,43 @@ namespace UI.Views
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            string localPath = MainWindow.GlobalLocalResourceNavigation.NavigationLabel.Text;
 
+            foreach (var anItem in NavigationList.SelectedItems)
+            {
+                if (anItem is ResourceItem t)
+                {
+                    this.AddToTaskList(localPath, t.FilePath);
+                }
+            };
+        }
+
+        private void AddToTaskList(string localPath, string remotePath)
+        {
+            try
+            {
+                List<FileInfo> t = Client.List(remotePath);
+
+                foreach (FileInfo fileInfo in t)
+                {
+                    if (fileInfo.IsFolder)
+                    {
+                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName);
+                    }
+                    else
+                    {
+                        MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                            new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
+                        );
+                    }
+                }
+            }
+            catch (Exception excpetion)
+            {
+                MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                    new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
+                );
+            }
         }
     }
 

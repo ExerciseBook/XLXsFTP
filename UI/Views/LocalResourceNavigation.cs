@@ -49,6 +49,7 @@ namespace UI.Views
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            if (MainWindow.GlobalRemoteResourceNavigation.Client == null) return;
             if (!MainWindow.GlobalRemoteResourceNavigation.Client.Connected) return;
 
             string remotePath = MainWindow.GlobalRemoteResourceNavigation.NavigationLabel.Text;
