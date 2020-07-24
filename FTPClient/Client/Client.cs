@@ -84,13 +84,32 @@ namespace FTPClient.Client
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
-            byte[] tmp = new byte[1];
             // 上传
-            for (int i = offset; i < fileContentsBytes.Length; i++)
+            int datasize = 1024;
+            byte[] data = new byte[datasize];
+            for (int i = 0; i < fileContentsBytes.Length; i++)
             {
-                tmp[0] = fileContentsBytes[i];
-                dataSocket.Send(tmp);
+                int j = i;
+                if (fileContentsBytes.Length - i < datasize)
+                {
+                    byte[] tmp = new byte[fileContentsBytes.Length - i];
+                    while (j < fileContentsBytes.Length)
+                    {
+                        tmp[j - i] = fileContentsBytes[j];
+                        j++;
+                    }
+                    dataSocket.Send(tmp);
+                    break;
+                }
+                while (j < i + datasize)
+                {
+                    data[j - i] = fileContentsBytes[j];
+                    j++;
+                }
+                dataSocket.Send(data);
+                i = j - 1;
             }
+            // 关闭socket连接
             dataSocket.Close();
 
             // 226 or 250
@@ -115,22 +134,50 @@ namespace FTPClient.Client
             if (status != 227) throw new FTPClientException(status, line);
             string dataConnection = line;
 
+            // 处理路径
+            string[] folders = remotePath.Split('/');
+            string filename = folders[folders.Length - 1];
+            bool flag = false;
+
+            for (int i = 0; i < folders.Length - 1; i++)
+            {
+                if (folders[i].Length == 0) continue;
+
+                if (flag)
+                {
+                    // MKD 创建目录 => 257
+                    _commandHelper.Writeln("MKD " + folders[i]);
+                    line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+                    if (status != 257) throw new FTPClientException(status, line);
+                }
+
+                // CWD 切换工作区 => 250
+                _commandHelper.Writeln("CWD " + folders[i]);
+                line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+
+                // 路径不存在
+                if (status != 250)
+                {
+                    flag = true;
+                    i--;
+                }
+            }
+
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 350) throw new FTPClientException(status, line);
 
             // STOR 路径 => 150
-            _commandHelper.Writeln("STOR " + remotePath);
+            _commandHelper.Writeln("STOR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150) throw new FTPClientException(status, line);
 
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
             // 分段读取文件字节
-            byte[] buff = new byte[1024];
-            long buffsize = buff.Length;
+            long buffsize = 1048576;
+            byte[] buff = new byte[buffsize];
             long start = offset;
             try
             {
@@ -143,12 +190,30 @@ namespace FTPClient.Client
                     // 读取一块文件
                     int tot = fs.Read(buff, 0, (int)Math.Min(buffsize, fs.Length - start));
 
-                    byte[] tmp = new byte[1];
                     // 上传
+                    int datasize = 1024;;
+                    byte[] data = new byte[datasize];
                     for (long i = 0; i < tot; i++)
                     {
-                        tmp[0] = buff[i];
-                        dataSocket.Send(tmp);
+                        long j = i;
+                        if ((long)tot - i < 1024)
+                        {
+                            byte[] tmp = new byte[tot - i];
+                            while (j < tot)
+                            {
+                                tmp[j - i] = buff[j];
+                                j++;
+                            }
+                            dataSocket.Send(tmp);
+                            break;
+                        }
+                        while (j < i + datasize)
+                        {
+                            data[j - i] = buff[j];
+                            j++;
+                        }
+                        dataSocket.Send(data);
+                        i = j - 1;
                     }
 
                     // 更新下一次读取的起点
@@ -253,7 +318,19 @@ namespace FTPClient.Client
             _commandHelper.Writeln("RETR " + remotePath);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 150) throw new FTPClientException(status, line);
-            
+
+            // 获取本地目录
+            string[] folders = localPath.Split('\\');
+            string localDirectory = "";
+            for (int i = 0; i < folders.Length - 1; i++) localDirectory += folders[i] + '\\';
+
+            // 判断本地目录是否存在
+            if (!Directory.Exists(localDirectory))
+            {
+                // 创建目录
+                Directory.CreateDirectory(localDirectory);
+            }
+
             // 创建数据连接
             Socket dataSocket = CommandHelper.AddressParserAndConnect(dataConnection);
 
@@ -285,7 +362,6 @@ namespace FTPClient.Client
             {
                 throw ex;
             }
-            
 
             // 226 => 结束数据连接
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
