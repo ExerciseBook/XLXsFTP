@@ -29,7 +29,7 @@ namespace Test.Client
             string filename = "/" + Guid.NewGuid().ToString() + ".txt";
 
             // 测试文件名
-            string testFile = "test.dll";
+            string testFile = "test.txt";
 
             // 本地文件路径
             string localDir = @"E:\";
