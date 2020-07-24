@@ -179,6 +179,7 @@ namespace UI.Views
                         MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                             new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
                         );
+                        MainWindow.GlobalTaskListWorker.ReleaseOne();
                     }
                 }
             }
@@ -187,6 +188,7 @@ namespace UI.Views
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                     new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
                 );
+                MainWindow.GlobalTaskListWorker.ReleaseOne();
             }
         }
     }

@@ -79,6 +79,7 @@ namespace UI.Views
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                         new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
                     );
+                    MainWindow.GlobalTaskListWorker.ReleaseOne();
                 }
             }
             catch (UnauthorizedAccessException excpetion)
@@ -86,6 +87,7 @@ namespace UI.Views
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                     new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
                 );
+                MainWindow.GlobalTaskListWorker.ReleaseOne();
             }
         }
 

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Windows;
+using UI.FTP;
 using UI.Src.Walterlv;
 
 namespace UI.Views
@@ -15,6 +16,7 @@ namespace UI.Views
         public static LocalResourceNavigation GlobalLocalResourceNavigation = null;
         public static RemoteResourceNavigation GlobalRemoteResourceNavigation = null;
         public static TaskList GlobalTaskList = null;
+        public static TaskListWorker GlobalTaskListWorker;
 
         public MainWindow()
         {
@@ -25,6 +27,8 @@ namespace UI.Views
             MainWindow.GlobalRemoteResourceNavigation = CTRLRemoteResourceNavigation;
             MainWindow.GlobalTaskList = CTRLTaskList;
 
+            MainWindow.GlobalTaskListWorker = TaskListWorker.Boot();
         }
+
     }
 }
