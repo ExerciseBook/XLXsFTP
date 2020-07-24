@@ -29,14 +29,14 @@ namespace Test.Client
             string filename = "/" + Guid.NewGuid().ToString() + ".txt";
 
             // 测试文件名
-            string testFile = "test.txt";
+            string testFile = "test.dll";
 
             // 本地文件路径
             string localDir = @"E:\";
             string localPath = localDir + testFile;
 
             // 远程文件路径
-            string remoteDir = "/temp2/temp3/temp44/temp55/";
+            string remoteDir = "/temp/";
             string remotePath = remoteDir + testFile;
 
             // 随便生成个文件数据
