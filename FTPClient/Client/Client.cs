@@ -387,23 +387,11 @@ namespace FTPClient.Client
 
                 while (start < fileSize)
                 {
-                    if (fileSize - start < buffsize)
-                    {
-                        buff = new byte[fileSize - start];
-                        // 接收数据
-                        dataSocket.Receive(buff);
-                        // 写入本地文件
-                        fs.Write(buff, 0, buff.Length);
-                        break;
-                    }
-
+                    if (ProcessUpdate != null) ProcessUpdate(start, fs.Length);
                     // 接收数据
-                    dataSocket.Receive(buff);
-
-                    // 写入本地文件
-                    fs.Write(buff, 0, buff.Length);
-
-                    start += buffsize;
+                    int length = dataSocket.Receive(buff);
+                    fs.Write(buff, 0, length);
+                    start += length;
                 }
 
                 fs.Close();
