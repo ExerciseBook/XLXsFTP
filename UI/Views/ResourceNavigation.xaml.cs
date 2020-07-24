@@ -86,12 +86,12 @@ namespace UI.Views
 
         private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
 
-        protected void AddTransmitTask(Direction direction, string localPath, string remotePath, string filename)
+        protected void AddTransmitTask(Direction direction, string localPath, string remotePath, string filename, int type)
         {
             if (Mutex == null) return;
             //Mutex.WaitOne();
             MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                new TransmitTask(direction, localPath, remotePath, filename)
+                new TransmitTask(direction, localPath, remotePath, filename, type)
             );
             //Mutex.Release();
             Sem.Release();

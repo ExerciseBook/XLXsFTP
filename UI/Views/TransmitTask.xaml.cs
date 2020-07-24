@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
@@ -28,10 +29,15 @@ namespace UI.Views
         private readonly string _remotePath = null;
 
         private readonly string _fileName = null;
+        /// <summary>
+        /// 0 文件
+        /// 1 文件夹
+        /// </summary>
+        private readonly int _type = -1;
 
         private int _status = 0;
 
-        public TransmitTask(Direction direction, string localPath, string remotePath, string fileName)
+        public TransmitTask(Direction direction, string localPath, string remotePath, string fileName, int type)
         {
             InitializeComponent();
 
@@ -39,6 +45,7 @@ namespace UI.Views
             this._localPath = localPath;
             this._remotePath = remotePath;
             this._fileName = fileName;
+            this._type = type;
 
             this._status = 0;
             
@@ -83,11 +90,34 @@ namespace UI.Views
                 switch (this._direction)
                 {
                     case Direction.ToRemote:
-                        client?.Upload(this._localPath, this._remotePath, 0);
+                    {
+                        if (this._type == 0)
+                        {
+                            client?.Upload(this._localPath, this._remotePath, 0);
+                        }
+                        else if (this._type == 1)
+                        {
+                            client?.CreateDirectory(this._remotePath);
+                        }
+
                         break;
-                    case Direction.ToLocal:
-                        client?.Download(this._localPath, this._remotePath, 0);
+                    }
+
+                case Direction.ToLocal:
+                    {
+                        if (this._type == 0)
+                        {
+                            client?.Download(this._localPath, this._remotePath, 0);
+                        }
+                        else if (this._type == 1)
+                        // 判断本地目录是否存在
+                        if (!Directory.Exists(this._localPath))
+                        {
+                            // 创建目录
+                            Directory.CreateDirectory(this._localPath);
+                        }
                         break;
+                    }
                 }
 
                 if (this._direction != Direction.Null)

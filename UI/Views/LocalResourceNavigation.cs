@@ -80,7 +80,7 @@ namespace UI.Views
                     // 是文件
                     FileInfo file = new FileInfo(localPath);
 
-                    AddTransmitTask(Direction.ToRemote, file.FullName, remotePath, file.Name);
+                    AddTransmitTask(Direction.ToRemote, file.FullName, remotePath, file.Name, 0);
                 }
                 else if (Directory.Exists(localPath))
                 {
@@ -89,18 +89,20 @@ namespace UI.Views
 
                     foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
                     {
+                        AddTransmitTask(Direction.ToRemote, Directory.FullName, remotePath + '/' + Directory.Name, Directory.Name, 1);
+                        
                         this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
                     }
 
                     foreach (FileInfo file in folder.GetFiles("*.*"))
                     {
-                        AddTransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name);
+                        AddTransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name, 0);
                     }
                 }
             }
             catch (UnauthorizedAccessException excpetion)
             {
-                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message);
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message, 0);
             }
         }
 

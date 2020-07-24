@@ -62,11 +62,6 @@ namespace FTPClient.Client
             string line;
             int status;
 
-            // 使用被动模式
-            _commandHelper.Writeln("PASV");
-            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 227) throw new FTPClientException(status, line);
-
             // 建立目录
             string[] folders = remotePath.Split('/');
             bool flag = false;

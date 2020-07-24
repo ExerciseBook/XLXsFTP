@@ -181,6 +181,9 @@ namespace UI.Views
                 {
                     if (fileInfo.IsFolder)
                     {
+                        AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
+                            remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
+
                         AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.IsFolder);
                     }
                     else
@@ -188,18 +191,18 @@ namespace UI.Views
                         if (isFolder)
                         {
                             AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
-                                remotePath + '/' + fileInfo.FileName, fileInfo.FileName);
+                                remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 0);
                         }
                         else
                         {
-                            AddTransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName);
+                            AddTransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName, 0);
                         }
                     }
                 }
             }
             catch (Exception excpetion)
             {
-                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message);
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message, 0);
             }
         }
     }
