@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Web;
 using System.Windows.Controls;
+using UI.Helpers;
 
 namespace UI.Views
 {
@@ -23,38 +24,11 @@ namespace UI.Views
             TextBoxPassword.KeyDown += this._remoteResourceNavigation.AddressBox_KeyDown;
         }
 
-        /// <summary>
-        /// 被占用？
-        /// </summary>
-        private int _isOccupied = 0;
-
-        /// <summary>
-        /// 申请占用
-        /// </summary>
-        /// <returns>true 申请占用成功，false 申请占用失败</returns>
-        public Boolean TryOccupied()
-        {
-            int t = 1;
-            int flag = Interlocked.Exchange(ref this._isOccupied, t);
-            if (flag == 1) return false;
-            return true;
-        }
-
-        /// <summary>
-        /// 释放占用
-        /// </summary>
-        /// <returns></returns>
-        public Boolean ReleaseOccupation()
-        {
-            int t = 0;
-            int flag = Interlocked.Exchange(ref this._isOccupied, t);
-            if (flag == 1) return true;
-            return false;
-        }
+        private readonly MutexFlag _occupyFlag = new MutexFlag();
 
         public void InputSyncToTop(object sender, TextChangedEventArgs e)
         {
-            if (this.TryOccupied())
+            if (this._occupyFlag.TryOccupied())
             {
                 _addressBox.Text = "ftp://";
                 if (!String.IsNullOrEmpty(TextBoxUsername.Text)) _addressBox.Text += HttpUtility.UrlEncode(TextBoxUsername.Text);
@@ -64,13 +38,13 @@ namespace UI.Views
                 if (!String.IsNullOrEmpty(TextBoxPath.Text)) _addressBox.Text += 
                     TextBoxPath.Text.StartsWith('/') ? TextBoxPath.Text : "/" + TextBoxPath.Text;
 
-                this.ReleaseOccupation();
+                this._occupyFlag.ReleaseOccupation();
             }
         }
 
         public void InputSyncToBottom(object sender, TextChangedEventArgs e)
         {
-            if (this.TryOccupied())
+            if (this._occupyFlag.TryOccupied())
             {
                 try
                 {
@@ -90,7 +64,7 @@ namespace UI.Views
                     // ignore
                 }
 
-                this.ReleaseOccupation();
+                this._occupyFlag.ReleaseOccupation();
             }
         }
     }

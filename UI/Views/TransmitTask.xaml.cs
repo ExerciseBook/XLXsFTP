@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FTPClient.Client;
+using UI.Helpers;
 
 namespace UI.Views
 {
@@ -54,10 +55,16 @@ namespace UI.Views
             LabelFileName.Content += this._fileName;
         }
 
+        private readonly MutexFlag _occupyFlag = new MutexFlag();
+
         public void Execute()
         {
+            this._occupyFlag.Occupied();
+
             try
             {
+                
+                if (this._status != 0) return;
                 this._status = 1;
 
                 Client client = null;
@@ -84,6 +91,7 @@ namespace UI.Views
                 LabelFileName.Content += exception.Message;
             }
 
+            this._occupyFlag.ReleaseOccupation();
         }
 
         private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
@@ -95,11 +103,9 @@ namespace UI.Views
 
         public void Delete()
         {
-            if (this._status == 0)
-            {
-                Sem.WaitOne();
-                MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
-            }
+            if (!this._occupyFlag.TryOccupied() || this._status != 0) return;
+            Sem.WaitOne();
+            MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
         }
 
     }

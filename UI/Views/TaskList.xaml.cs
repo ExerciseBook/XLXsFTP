@@ -92,22 +92,22 @@ namespace UI.Views
 
         private void TaskList_Delete(object sender, RoutedEventArgs e)
         {
-           //if (Mutex == null) return;
+           if (Mutex == null) return;
            //Mutex.WaitOne();
-           //
-           //List<TransmitTask> deleteList = new List<TransmitTask>();
-           //
-           //foreach (var anItem in ListViewTaskList.SelectedItems)
-           //{
-           //    if (anItem is TransmitTask t)
-           //    {
-           //        if (t.CanDelete) deleteList.Add(t);
-           //    }
-           //};
-           //
-           //int n = deleteList.Count;
-           //for (int i = 0; i < n; i++) deleteList[i].Delete();
-           //
+           
+           List<TransmitTask> deleteList = new List<TransmitTask>();
+           
+           foreach (var anItem in ListViewTaskList.SelectedItems)
+           {
+               if (anItem is TransmitTask t)
+               {
+                   if (t.CanDelete) deleteList.Add(t);
+               }
+           };
+           
+           int n = deleteList.Count;
+           for (int i = 0; i < n; i++) deleteList[i].Delete();
+           
            //Mutex.Release();
         }
     }
