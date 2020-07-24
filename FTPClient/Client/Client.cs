@@ -348,5 +348,10 @@ namespace FTPClient.Client
 
             return ret;
         }
+
+        public void Disconnect()
+        {
+            this._commandConnection.Disconnect(false);
+        }
     }
 }

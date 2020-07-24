@@ -85,6 +85,12 @@ namespace UI.Views
                         break;
                 }
 
+                if (this._direction != Direction.Null)
+                {
+                    client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
+                    client.Disconnect();
+                }
+
             }
             catch (Exception exception)
             {
