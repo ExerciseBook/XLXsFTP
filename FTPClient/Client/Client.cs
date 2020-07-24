@@ -182,8 +182,11 @@ namespace FTPClient.Client
             try
             {
                 FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read);
+
                 while (start < fs.Length)
                 {
+                    if (ProcessUpdate != null) ProcessUpdate(start, fs.Length);
+
                     // 设置当前读取的起点
                     fs.Position = start;
 
@@ -191,7 +194,7 @@ namespace FTPClient.Client
                     int tot = fs.Read(buff, 0, (int)Math.Min(buffsize, fs.Length - start));
 
                     // 上传
-                    int datasize = 1024;;
+                    int datasize = 1024;
                     byte[] data = new byte[datasize];
                     for (long i = 0; i < tot; i++)
                     {
@@ -344,6 +347,8 @@ namespace FTPClient.Client
 
                 while (start < fileSize)
                 {
+                    if (ProcessUpdate != null) ProcessUpdate(start, fileSize);
+
                     long buffsize = Math.Min(fileSize - start, 2);
                     byte[] buff = new byte[buffsize];
 
@@ -425,9 +430,21 @@ namespace FTPClient.Client
             return ret;
         }
 
+        /// <summary>
+        /// 断开连接
+        /// </summary>
         public void Disconnect()
         {
             this._commandConnection.Disconnect(false);
         }
+
+        /// <summary>
+        /// 进度条更新
+        /// </summary>
+        /// <param name="done"></param>
+        /// <param name="total"></param>
+        public delegate void ProcessUpdateDelegate(long done, long total);
+
+        public event ProcessUpdateDelegate ProcessUpdate;
     }
 }

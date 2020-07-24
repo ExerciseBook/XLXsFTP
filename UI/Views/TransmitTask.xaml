@@ -20,7 +20,7 @@
 
 
         <Grid Row="0" Column="0" ColumnSpan="3" x:Name="ProcessBarBorder">
-            <Grid Background="Blue" HorizontalAlignment="Left" x:Name="ProcessBar"></Grid>
+            <Grid HorizontalAlignment="Left" x:Name="ProcessBar"></Grid>
         </Grid>
 
         <Grid Row="0" Column="1">

@@ -77,6 +77,7 @@ namespace UI.Views
                 {
                     client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
                     client.Connect();
+                    client.ProcessUpdate += UpdateProcess;
                 }
 
                 switch (this._direction)
@@ -92,13 +93,17 @@ namespace UI.Views
                 if (this._direction != Direction.Null)
                 {
                     client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
+                    client.ProcessUpdate -= UpdateProcess;
                     client.Disconnect();
                 }
 
             }
             catch (Exception exception)
             {
-                LabelFileName.Content += exception.Message;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LabelFileName.Content += exception.Message;
+                });
             }
 
             this._occupyFlag.ReleaseOccupation();
@@ -106,17 +111,21 @@ namespace UI.Views
 
         public void UpdateProcess(long done, long total)
         {
-            SolidColorBrush first = Brushes.Blue;
-            first.Opacity = 0.5;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // SolidColorBrush first = Brushes.Blue;
+                SolidColorBrush first = new SolidColorBrush(Color.FromArgb(0x7F, 0x00, 0x00, 0xFF));
 
-            SolidColorBrush second = Brushes.Aqua;
+                SolidColorBrush second = Brushes.Aqua;
 
-            double process = (double)done / total;
+                double process = (double)done / total;
 
-            SolidColorBrush result = MixColor(second, first, process);
+                SolidColorBrush result = this.MixColor(second, first, process);
 
-            ProcessBar.Background = result;
-            ProcessBar.Width = ProcessBarBorder.ActualWidth * process;
+                ProcessBar.Background = result;
+                ProcessBar.Width = ProcessBarBorder.ActualWidth * process;
+            });
+           
         }
 
         private SolidColorBrush MixColor(SolidColorBrush colorA, SolidColorBrush colorB, double aValue)
@@ -124,10 +133,10 @@ namespace UI.Views
             byte a, r, g, b;
             double bValue = 1 - aValue;
 
-            a = (byte)(colorA.Color.A * aValue + colorA.Color.A * bValue);
-            r = (byte)(colorA.Color.R * aValue + colorA.Color.R * bValue);
-            g = (byte)(colorA.Color.G * aValue + colorA.Color.G * bValue);
-            b = (byte)(colorA.Color.B * aValue + colorA.Color.B * bValue);
+            a = (byte)(colorA.Color.A * aValue + colorB.Color.A * bValue);
+            r = (byte)(colorA.Color.R * aValue + colorB.Color.R * bValue);
+            g = (byte)(colorA.Color.G * aValue + colorB.Color.G * bValue);
+            b = (byte)(colorA.Color.B * aValue + colorB.Color.B * bValue);
 
             return new SolidColorBrush(Color.FromArgb(a, r, g, b));
         }
