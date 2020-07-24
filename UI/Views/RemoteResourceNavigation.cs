@@ -15,7 +15,7 @@ namespace UI.Views
 {
     public class RemoteResourceNavigation : ResourceNavigation
     {
-        private Client client;
+        public Client Client { get; private set; }
 
         private TextBox _addressBox;
         private LoginView _loginView;
@@ -65,8 +65,12 @@ namespace UI.Views
 
                 Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
                 IPEndPoint server = Helpers.Helper.ParseIPEndPoint(host, port);
-                client = new Client(server, username, password);
-                client.Connect();
+                Client = new Client(server, username, password);
+                Client.Connect();
+
+                MainWindow.Server = server;
+                MainWindow.Username = username;
+                MainWindow.Password = password;
 
                 this._addressBox.Visibility = Visibility.Hidden;
                 NavigationLabel.Visibility = Visibility.Visible;
@@ -100,7 +104,7 @@ namespace UI.Views
 
             try
             {
-                List<FileInfo> t = client.List(path);
+                List<FileInfo> t = Client.List(path);
 
                 NavigationList.Items.Clear();
 

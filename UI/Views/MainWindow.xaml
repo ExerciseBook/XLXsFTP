@@ -34,7 +34,7 @@
 
         <!--任务状态-->
         <Grid Row="1" Column="0" >
-            <views:TaskList/>
+            <views:TaskList x:Name="CTRLTaskList"/>
         </Grid>
 
         <Grid Row="1" Column="1">
@@ -43,7 +43,7 @@
         
         <!--本机-->
         <Grid Row="1" Column="2">
-            <views:LocalResourceNavigation/>
+            <views:LocalResourceNavigation x:Name="CTRLLocalResourceNavigation"/>
         </Grid>
 
         <Grid Row="1" Column="3">
@@ -52,7 +52,7 @@
 
         <!--远程-->
         <Grid Row="1" Column="4">
-            <views:RemoteResourceNavigation/>
+            <views:RemoteResourceNavigation x:Name="CTRLRemoteResourceNavigation"/>
         </Grid>
 
     </Grid>

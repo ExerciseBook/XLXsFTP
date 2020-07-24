@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,9 +18,39 @@ namespace UI.Views
     /// </summary>
     public partial class TransmitTask : UserControl
     {
-        public TransmitTask()
+        private Direction _direction = Direction.Null;
+
+        private string _localPath = null;
+        private string _remotePath = null;
+
+        private string _fileName = null;
+
+        public TransmitTask(Direction direction, string localPath, string remotePath, string fileName)
         {
             InitializeComponent();
+
+            this._direction = direction;
+            this._localPath = localPath;
+            this._remotePath = remotePath;
+            this._fileName = fileName;
+
+            switch (direction)
+            {
+                case Direction.ToRemote :
+                    LabelFileName.Content = '→';
+                    break;
+                case Direction.ToLocal :
+                    LabelFileName.Content = '←';
+                    break;
+            }
+
+            LabelFileName.Content += this._fileName;
         }
+    }
+    public enum Direction
+    {
+        Null = 0,
+        ToRemote = 1,
+        ToLocal = 2
     }
 }

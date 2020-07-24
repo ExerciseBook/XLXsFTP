@@ -22,14 +22,13 @@
             <ListView Background="Transparent"
                       BorderThickness="0"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      x:Name="CTRLTaskList">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
-
-                <local:TransmitTask/>
             </ListView>
         </Grid>
 

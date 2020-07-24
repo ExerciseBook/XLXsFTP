@@ -49,12 +49,44 @@ namespace UI.Views
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            if (!MainWindow.GlobalRemoteResourceNavigation.Client.Connected) return;
+
+            string remotePath = MainWindow.GlobalRemoteResourceNavigation.NavigationLabel.Text;
+
             foreach (var anItem in NavigationList.SelectedItems)
             {
                 if (anItem is ResourceItem t)
                 {
+                    this.AddToTaskList(t.FilePath, remotePath);
                 }
             };
         }
+
+        private void AddToTaskList(string localPath,string remotePath)
+        {
+            try
+            {
+                DirectoryInfo folder = new DirectoryInfo(localPath);
+
+                foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+                {
+                    this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
+                }
+
+                foreach (FileInfo file in folder.GetFiles("*.*"))
+                {
+                    MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                        new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
+                    );
+                }
+            }
+            catch (UnauthorizedAccessException excpetion)
+            {
+                MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                    new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
+                );
+            }
+        }
+
     }
 }
