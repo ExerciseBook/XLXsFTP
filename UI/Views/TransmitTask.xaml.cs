@@ -99,11 +99,10 @@ namespace UI.Views
                         {
                             client?.CreateDirectory(this._remotePath);
                         }
-
                         break;
                     }
 
-                case Direction.ToLocal:
+                    case Direction.ToLocal:
                     {
                         if (this._type == 0)
                         {
@@ -122,9 +121,11 @@ namespace UI.Views
 
                 if (this._direction != Direction.Null)
                 {
-                    client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
-                    client.ProcessUpdate -= UpdateProcess;
-                    client.Disconnect();
+                    if (client != null)
+                    {
+                        client.ProcessUpdate -= UpdateProcess;
+                        client.Disconnect();
+                    }
                 }
 
             }
