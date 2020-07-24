@@ -53,6 +53,48 @@ namespace FTPClient.Client
             this.Connected = true;
         }
 
+        /// <summary>
+        /// 建立目录
+        /// </summary>
+        /// <param name="remotePath"></param>
+        public void CreateDirectory(string remotePath)
+        {
+            string line;
+            int status;
+
+            // 使用被动模式
+            _commandHelper.Writeln("PASV");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 227) throw new FTPClientException(status, line);
+
+            // 建立目录
+            string[] folders = remotePath.Split('/');
+            bool flag = false;
+
+            for (int i = 0; i < folders.Length; i++)
+            {
+                if (folders[i].Length == 0) continue;
+
+                if (flag)
+                {
+                    // MKD 创建目录 => 257
+                    _commandHelper.Writeln("MKD " + folders[i]);
+                    line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+                    if (status != 257) throw new FTPClientException(status, line);
+                }
+
+                // CWD 切换工作区 => 250
+                _commandHelper.Writeln("CWD " + folders[i]);
+                line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+
+                // 路径不存在
+                if (status != 250)
+                {
+                    flag = true;
+                    i--;
+                }
+            }
+        }
 
         /// <summary>
         /// 上传文件
