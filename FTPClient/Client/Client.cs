@@ -156,7 +156,7 @@ namespace FTPClient.Client
             // STOR 路径 => 150
             _commandHelper.Writeln("STOR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150) throw new FTPClientException(status, line);
+            if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 上传
             int datasize = 1024;
@@ -337,7 +337,7 @@ namespace FTPClient.Client
             // RETR 路径 => 150;
             _commandHelper.Writeln("RETR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150) throw new FTPClientException(status, line);
+            if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 根据文件大小获取信息
             byte[] file = new byte[fileSize];
@@ -382,7 +382,7 @@ namespace FTPClient.Client
             // RETR 路径 => 150;
             _commandHelper.Writeln("RETR " + remotePath);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150) throw new FTPClientException(status, line);
+            if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 获取本地目录
             string[] folders = localPath.Split('\\');
@@ -461,7 +461,7 @@ namespace FTPClient.Client
             // 执行指令
             _commandHelper.Writeln("LIST " + path);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150) throw new FTPClientException(status, line);
+            if (status != 150 && status != 125)  throw new FTPClientException(status, line);
 
             // 列出信息
             List<FileInfo> ret = new List<FileInfo>();
