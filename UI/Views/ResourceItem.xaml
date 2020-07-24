@@ -9,8 +9,8 @@
              Background="Transparent">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" MaxHeight="1px"/>
             <RowDefinition Height="9*"/>
+            <RowDefinition Height="1*" MaxHeight="1px"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -23,22 +23,26 @@
             <ColumnDefinition Width="1*" MaxWidth="1px"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Row="1" Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridFileName">
+        <Grid Row="0" Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridFileName">
             <Grid>
                 <Label x:Name="LabelFileName"/>
             </Grid>
         </Grid>
 
-        <Grid Row="1" Column="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridSize">
+        <Grid Row="0" Column="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridSize">
             <Grid>
                 <Label x:Name="LabelSize"/>
             </Grid>
         </Grid>
 
-        <Grid Row="1" Column="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridModifiedTime">
+        <Grid Row="0" Column="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="GridModifiedTime">
             <Grid>
                 <Label x:Name="LabelModifiedTime"/>
             </Grid>
+        </Grid>
+
+        <Grid Row="1" Column="0" ColumnSpan="7">
+            <Border BorderThickness="1" BorderBrush="Black" Opacity="0.15"/>
         </Grid>
 
     </Grid>

@@ -21,6 +21,7 @@
             <RowDefinition Height="2*" MaxHeight="32px"/>
             <RowDefinition Height="2*" MaxHeight="32px"/>
             <RowDefinition Height="2*" MaxHeight="32px"/>
+            <RowDefinition Height="2*" MaxHeight="32px"/>
         </Grid.RowDefinitions>
 
 
@@ -54,14 +55,19 @@
                      TextChanged="InputSyncToTop" x:Name="TextBoxPassword"></TextBox>
         </Grid>
 
-        <Grid Column="1" Row="4" Visibility="Hidden">
+        <Grid Column="1" Row="5" Visibility="Hidden">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Right"
                      Background="Transparent" BorderThickness="0" IsEnabled="False">FilePath</TextBox>
         </Grid>
-        <Grid Column="3" Row="4" Visibility="Hidden">
+        <Grid Column="3" Row="5" Visibility="Hidden">
             <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
                      Background="#3FFFFFFF" BorderThickness="0"
                      TextChanged="InputSyncToTop" x:Name="TextBoxPath"></TextBox>
+        </Grid>
+
+        <Grid Column="3" Row="4">
+            <TextBox VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                     Background="Transparent" BorderThickness="0" IsEnabled="False">Press Enter to connect.</TextBox>
         </Grid>
 
     </Grid>

@@ -23,6 +23,10 @@
             <ColumnDefinition Width="1*" MaxWidth="12px"/>
         </Grid.ColumnDefinitions>
 
+        <Grid Column="1" ColumnSpan="2" Row="0" RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Label FontSize="72" Opacity="0.1" x:Name="NavigationName"></Label>
+        </Grid>
+
         <Grid Row="0" Column="2">
             <TextBox x:Name="NavigationLabel" Background="Transparent" BorderThickness="0"
                      TextChanged="NavigationLabel_OnTextChanged"

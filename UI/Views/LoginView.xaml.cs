@@ -21,6 +21,8 @@ namespace UI.Views
             this._addressBox = addressBox;
             this._remoteResourceNavigation = remoteResourceNavigation;
 
+            TextBoxHost.KeyDown += this._remoteResourceNavigation.AddressBox_KeyDown;
+            TextBoxUsername.KeyDown += this._remoteResourceNavigation.AddressBox_KeyDown;
             TextBoxPassword.KeyDown += this._remoteResourceNavigation.AddressBox_KeyDown;
         }
 

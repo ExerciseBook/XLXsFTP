@@ -21,6 +21,8 @@ namespace UI.Views
 
         public RemoteResourceNavigation() : base()
         {
+            NavigationName.Content = "Remote";
+
             Grid top = (Grid)NavigationLabel.Parent;
             Grid bottom = (Grid)NavigationList.Parent;
 

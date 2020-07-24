@@ -18,6 +18,10 @@
             <ColumnDefinition Width="1*" MaxWidth="8px"/>
         </Grid.ColumnDefinitions>
 
+        <Grid Column="1" ColumnSpan="2" Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Label FontSize="36" Opacity="0.15" x:Name="NavigationName">Tasks</Label>
+        </Grid>
+
         <Grid Row="0" Column="1">
             <ListView Background="Transparent"
                       x:Name="ListViewTaskList"

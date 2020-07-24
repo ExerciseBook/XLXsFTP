@@ -10,6 +10,7 @@ namespace UI.Views
         public LocalResourceNavigation() : base()
         {
             NavigationLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            NavigationName.Content = "Local";
         }
 
         public override void NavigationRefresh()
