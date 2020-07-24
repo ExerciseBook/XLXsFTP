@@ -185,27 +185,21 @@ namespace UI.Views
                     }
                     else
                     {
-                        if (isFolder) {
-                            MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                                new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
-                            );
+                        if (isFolder)
+                        {
+                            AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
+                                remotePath + '/' + fileInfo.FileName, fileInfo.FileName);
                         }
                         else
-                        { 
-                            MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                                new TransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName)
-                            );
+                        {
+                            AddTransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName);
                         }
-                        MainWindow.GlobalTaskListWorker.ReleaseOne();
                     }
                 }
             }
             catch (Exception excpetion)
             {
-                MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                    new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
-                );
-                MainWindow.GlobalTaskListWorker.ReleaseOne();
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message);
             }
         }
     }

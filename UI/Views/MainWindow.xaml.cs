@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Net;
 using System.Windows;
 using UI.FTP;
@@ -30,5 +31,10 @@ namespace UI.Views
             MainWindow.GlobalTaskListWorker = TaskListWorker.Boot();
         }
 
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            GlobalTaskListWorker.Status = 1;
+            GlobalTaskList.sem.Release();
+        }
     }
 }

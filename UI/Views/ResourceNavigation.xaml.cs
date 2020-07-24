@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -80,5 +81,21 @@ namespace UI.Views
 
         }
         public abstract void MenuItem_OnClick(object sender, RoutedEventArgs e);
+
+        private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
+
+        private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
+
+        protected void AddTransmitTask(Direction direction, string localPath, string remotePath, string filename)
+        {
+            if (Mutex == null) return;
+            //Mutex.WaitOne();
+            MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
+                new TransmitTask(direction, localPath, remotePath, filename)
+            );
+            //Mutex.Release();
+            Sem.Release();
+        }
+
     }
 }

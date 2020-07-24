@@ -31,6 +31,13 @@
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
+
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete" Click="TaskList_Delete" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+
             </ListView>
         </Grid>
 

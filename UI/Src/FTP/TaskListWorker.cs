@@ -12,26 +12,29 @@ namespace UI.FTP
             return new TaskListWorker();
         }
 
+        public Thread WorkerThread;
+
         private TaskListWorker()
         {
-            Thread childThread = new Thread(Run);
-            childThread.Start();
+            WorkerThread = new Thread(new ThreadStart(Run));
+            WorkerThread.Start();
         }
 
-        Semaphore sem = new Semaphore(0, Int32.MaxValue);
-        Semaphore mutex = new Semaphore(1, 1);
+        private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
 
-        public int ReleaseOne()
-        {
-            return sem.Release(1);
-        }
+        private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
+
+        public int Status = 0;
 
         private void Run()
         {
-            while (true) { 
+            while (Status == 0)
+            {
+                if (Mutex == null) continue;
 
-                mutex.WaitOne();
-                sem.WaitOne();
+                Sem.WaitOne();
+                if (Status != 0) return;
+                Mutex.WaitOne();
 
                 object t = MainWindow.GlobalTaskList.ListViewTaskList.Items[0];
                 if (t is TransmitTask aTask)
@@ -43,7 +46,7 @@ namespace UI.FTP
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(t);
-                    mutex.Release();
+                    Mutex.Release();
                 });
 
             }

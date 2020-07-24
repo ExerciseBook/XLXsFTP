@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,12 +21,14 @@ namespace UI.Views
     /// </summary>
     public partial class TransmitTask : UserControl
     {
-        private Direction _direction = Direction.Null;
+        private readonly Direction _direction = Direction.Null;
 
-        private string _localPath = null;
-        private string _remotePath = null;
+        private readonly string _localPath = null;
+        private readonly string _remotePath = null;
 
-        private string _fileName = null;
+        private readonly string _fileName = null;
+
+        private int _status = 0;
 
         public TransmitTask(Direction direction, string localPath, string remotePath, string fileName)
         {
@@ -35,6 +39,8 @@ namespace UI.Views
             this._remotePath = remotePath;
             this._fileName = fileName;
 
+            this._status = 0;
+            
             switch (direction)
             {
                 case Direction.ToRemote :
@@ -52,6 +58,8 @@ namespace UI.Views
         {
             try
             {
+                this._status = 1;
+
                 Client client = null;
 
                 if (this._direction != Direction.Null)
@@ -77,6 +85,23 @@ namespace UI.Views
             }
 
         }
+
+        private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
+        
+        private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
+
+
+        public bool CanDelete => this._status == 0;
+
+        public void Delete()
+        {
+            if (this._status == 0)
+            {
+                Sem.WaitOne();
+                MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
+            }
+        }
+
     }
     public enum Direction
     {

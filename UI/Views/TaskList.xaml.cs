@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,6 +14,10 @@ namespace UI.Views
     /// </summary>
     public partial class TaskList : UserControl
     {
+        public Semaphore sem = new Semaphore(0, Int32.MaxValue);
+
+        public Semaphore mutex = new Semaphore(1, 1);
+
         public TaskList()
         {
             InitializeComponent();
@@ -76,6 +84,31 @@ namespace UI.Views
             idx = ListViewTaskList.Items.Count == idx ? idx - 1 : idx;
             ListViewTaskList.ScrollIntoView(ListViewTaskList.Items[idx]);
 
+        }
+
+        private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
+
+        private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
+
+        private void TaskList_Delete(object sender, RoutedEventArgs e)
+        {
+           //if (Mutex == null) return;
+           //Mutex.WaitOne();
+           //
+           //List<TransmitTask> deleteList = new List<TransmitTask>();
+           //
+           //foreach (var anItem in ListViewTaskList.SelectedItems)
+           //{
+           //    if (anItem is TransmitTask t)
+           //    {
+           //        if (t.CanDelete) deleteList.Add(t);
+           //    }
+           //};
+           //
+           //int n = deleteList.Count;
+           //for (int i = 0; i < n; i++) deleteList[i].Delete();
+           //
+           //Mutex.Release();
         }
     }
 

@@ -7,6 +7,8 @@
         xmlns:views="clr-namespace:UI.Views"
         mc:Ignorable="d"
 
+        Closing="MainWindow_OnClosing"
+
         Title="XLXsFTP"
         Height="450" Width="800"
         MinHeight="450" MinWidth="800"

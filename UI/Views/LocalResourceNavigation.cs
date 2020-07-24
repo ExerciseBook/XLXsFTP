@@ -69,6 +69,8 @@ namespace UI.Views
             };
         }
 
+
+
         private void AddToTaskList(string localPath, string remotePath)
         {
             try
@@ -78,15 +80,11 @@ namespace UI.Views
                     // 是文件
                     FileInfo file = new FileInfo(localPath);
 
-                    MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                        new TransmitTask(Direction.ToRemote, file.FullName, remotePath, file.Name)
-                    );
-                    MainWindow.GlobalTaskListWorker.ReleaseOne();
+                    AddTransmitTask(Direction.ToRemote, file.FullName, remotePath, file.Name);
                 }
                 else if (Directory.Exists(localPath))
                 {
                     // 是文件夹
-
                     DirectoryInfo folder = new DirectoryInfo(localPath);
 
                     foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
@@ -96,21 +94,13 @@ namespace UI.Views
 
                     foreach (FileInfo file in folder.GetFiles("*.*"))
                     {
-                        MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                            new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
-                        );
-                        MainWindow.GlobalTaskListWorker.ReleaseOne();
+                        AddTransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name);
                     }
                 }
-
             }
-
             catch (UnauthorizedAccessException excpetion)
             {
-                MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                    new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
-                );
-                MainWindow.GlobalTaskListWorker.ReleaseOne();
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message);
             }
         }
 
