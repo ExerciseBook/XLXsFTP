@@ -20,10 +20,12 @@
 
         <Grid Row="0" Column="1">
             <ListView Background="Transparent"
+                      x:Name="ListViewTaskList"
                       BorderThickness="0"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      x:Name="CTRLTaskList">
+                      ScrollViewer.ScrollChanged="TaskList_OnScrollChanged">
+
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -32,6 +34,28 @@
             </ListView>
         </Grid>
 
-  
+        <Grid Row="0" Column="2" x:Name="TaskListScrollBarBorder"
+              Background="Transparent"
+              MouseLeftButtonDown="TaskListScrollBar_MouseDown"
+              MouseLeftButtonUp="TaskListScrollBar_MouseUp"
+              MouseMove="TaskListScrollBar_MouseMove">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" MaxWidth="4px"/>
+                    <ColumnDefinition Width="1*" MaxWidth="2px"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" MaxHeight="4px"/>
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="1*" MaxHeight="4px"/>
+                </Grid.RowDefinitions>
+
+                <Grid Column="1" Row="1" x:Name="TaskListScrollBar" VerticalAlignment="Top"/>
+            </Grid>
+        </Grid>
+
+
     </Grid>
 </UserControl>

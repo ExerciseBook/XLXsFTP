@@ -176,7 +176,7 @@ namespace UI.Views
                     }
                     else
                     {
-                        MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                        MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                             new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
                         );
                     }
@@ -184,7 +184,7 @@ namespace UI.Views
             }
             catch (Exception excpetion)
             {
-                MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                     new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
                 );
             }

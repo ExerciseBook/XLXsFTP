@@ -76,14 +76,14 @@ namespace UI.Views
 
                 foreach (FileInfo file in folder.GetFiles("*.*"))
                 {
-                    MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                    MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                         new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
                     );
                 }
             }
             catch (UnauthorizedAccessException excpetion)
             {
-                MainWindow.GlobalTaskList.CTRLTaskList.Items.Add(
+                MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
                     new TransmitTask(Direction.Null, localPath, null, excpetion.Message)
                 );
             }
