@@ -43,16 +43,35 @@ namespace FTPClient.Helpers
             }
         }
 
+
         /// <summary>
         /// 创建数据连接
         /// </summary>
+        /// <param name="mode">0:PASV, 1:EPSV</param>
         /// <param name="line"></param>
-        public static Socket AddressParserAndConnect(string line)
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public static Socket AddressParserAndConnect(int mode, string line, IPAddress ip = null)
         {
-            IPEndPoint IPE = CommandHelper.AddressParser(line);
-            Socket dataSocket = new Socket(IPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            dataSocket.Connect(IPE);
-            return dataSocket;
+            if(mode == 0)
+            {
+                IPEndPoint IPE = AddressParser(line);
+                Socket dataSocket = new Socket(IPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                dataSocket.Connect(IPE);
+                return dataSocket;
+            }else if(mode == 1)
+            {
+                int port = Convert.ToInt32(GetMiddleText(line, "|||", "|"));
+                IPEndPoint IPE = new IPEndPoint(ip, port);
+                Socket dataSocket = new Socket(IPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                dataSocket.Connect(IPE);
+                return dataSocket;
+            }
+            else
+            {
+                throw new Exception("Unknown mode.");
+            }
+            
         }
 
     }
