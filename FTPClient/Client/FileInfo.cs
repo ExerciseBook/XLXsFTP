@@ -31,7 +31,7 @@ namespace FTPClient.Client
             {
                 this._time = s2.Contains(":")
                     ? DateTime.Parse("" + this._now.Year + s + ' ' + s1 + ' ' + s2 + ':' + "00")
-                    : DateTime.Parse(s + ' ' + s1 + ' '+ s2);
+                    : DateTime.Parse(s + ' ' + s1 + ' ' + s2);
                 this._time = this._time.ToLocalTime();
             }
 
@@ -88,18 +88,47 @@ namespace FTPClient.Client
         public FileInfo(string line)
         {
 
-            string[] s = Regex.Split(line, "\\s+", RegexOptions.IgnoreCase);
-            // -rwxrwxrwx 1 owner group 74 Jul 20 10:53 5ead33f1-6b54-4c31-ab1a-0427e9afa5c7.txt
+            string[] s = new string[9];
 
-            // 0 -rwxrwxrwx
-            // 1 1
-            // 2 owner
-            // 3 group
-            // 4 74
-            // 5 Jul                                                Dec  
-            // 6 20                                                 31
-            // 7 10:53                                              2107
-            // 8 5ead33f1-6b54-4c31-ab1a-0427e9afa5c7.txt
+            int i = 0;
+            int flag = 1;
+            int p = 0;
+            for (p = 0; p < line.Length; p++)
+                if (line[p] != ' ')
+                    break;
+
+            for (; p < line.Length; p++)
+            {
+                // 文件名部分无视空格半段
+                if (i == 8)
+                {
+                    s[i] += line[p];
+                    continue;
+                }
+
+                if (flag == 0)
+                {
+                    if (line[p] == ' ') continue;
+
+                    flag = 1;
+                    i++;
+                    s[i] = "" + line[p];
+                    continue;
+
+                }
+
+                if (flag == 1)
+                {
+                    if (line[p] != ' ')
+                    {
+                        s[i] += line[p];
+                        continue;
+                    }
+
+                    flag = 0;
+                    continue;
+                }
+            }
 
             this.Permission = new FilePermission(s[0]);
             this.Preserved = Int32.Parse(s[1]);
