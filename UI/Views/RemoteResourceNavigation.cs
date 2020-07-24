@@ -95,7 +95,7 @@ namespace UI.Views
             }
 
         }
-        protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
+        public override void NavigationRefresh()
         {
             String path = NavigationLabel.Text;
             if (String.IsNullOrEmpty(path)) path = "/";

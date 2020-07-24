@@ -12,7 +12,7 @@ namespace UI.Views
             NavigationLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        protected override void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
+        public override void NavigationRefresh()
         {
             String path = NavigationLabel.Text;
             try

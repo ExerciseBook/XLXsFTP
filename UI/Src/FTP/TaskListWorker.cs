@@ -46,6 +46,11 @@ namespace UI.FTP
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(t);
+                    if (MainWindow.GlobalTaskList.ListViewTaskList.Items.Count == 0)
+                    {
+                        MainWindow.GlobalRemoteResourceNavigation.NavigationRefresh();
+                        MainWindow.GlobalLocalResourceNavigation.NavigationRefresh();
+                    }
                     Mutex.Release();
                 });
 

@@ -15,8 +15,16 @@ namespace UI.Views
         {
             InitializeComponent();
         }
+        public abstract void NavigationRefresh();
 
-        protected abstract void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e);
+        private void NavigationLabel_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            NavigationRefresh();
+        }
+        private void ResourceNavigation_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5) this.NavigationRefresh();
+        }
 
         private void NavigationList_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
