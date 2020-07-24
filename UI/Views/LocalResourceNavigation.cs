@@ -52,36 +52,59 @@ namespace UI.Views
             if (MainWindow.GlobalRemoteResourceNavigation.Client == null) return;
             if (!MainWindow.GlobalRemoteResourceNavigation.Client.Connected) return;
 
-            string remotePath = MainWindow.GlobalRemoteResourceNavigation.NavigationLabel.Text;
+            String remotePath = MainWindow.GlobalRemoteResourceNavigation.NavigationLabel.Text;
+            if (String.IsNullOrEmpty(remotePath)) remotePath = "/";
+            while (remotePath.EndsWith('/')) remotePath = remotePath.Substring(0, remotePath.Length - 1);
+            remotePath += '/';
+
 
             foreach (var anItem in NavigationList.SelectedItems)
             {
                 if (anItem is ResourceItem t)
                 {
-                    this.AddToTaskList(t.FilePath, remotePath);
+                    if (t.Type != 0 && t.Type != 1) continue;
+
+                    this.AddToTaskList(t.FilePath, remotePath + t.FileName);
                 }
             };
         }
 
-        private void AddToTaskList(string localPath,string remotePath)
+        private void AddToTaskList(string localPath, string remotePath)
         {
             try
             {
-                DirectoryInfo folder = new DirectoryInfo(localPath);
-
-                foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+                if (File.Exists(localPath))
                 {
-                    this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
-                }
+                    // 是文件
+                    FileInfo file = new FileInfo(localPath);
 
-                foreach (FileInfo file in folder.GetFiles("*.*"))
-                {
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                        new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
+                        new TransmitTask(Direction.ToRemote, file.FullName, remotePath, file.Name)
                     );
                     MainWindow.GlobalTaskListWorker.ReleaseOne();
                 }
+                else if (Directory.Exists(localPath))
+                {
+                    // 是文件夹
+
+                    DirectoryInfo folder = new DirectoryInfo(localPath);
+
+                    foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+                    {
+                        this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
+                    }
+
+                    foreach (FileInfo file in folder.GetFiles("*.*"))
+                    {
+                        MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
+                            new TransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name)
+                        );
+                        MainWindow.GlobalTaskListWorker.ReleaseOne();
+                    }
+                }
+
             }
+
             catch (UnauthorizedAccessException excpetion)
             {
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(

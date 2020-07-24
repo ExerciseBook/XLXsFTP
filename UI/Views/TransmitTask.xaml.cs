@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FTPClient.Client;
 
 namespace UI.Views
 {
@@ -45,6 +46,36 @@ namespace UI.Views
             }
 
             LabelFileName.Content += this._fileName;
+        }
+
+        public void Execute()
+        {
+            try
+            {
+                Client client = null;
+
+                if (this._direction != Direction.Null)
+                {
+                    client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
+                    client.Connect();
+                }
+
+                switch (this._direction)
+                {
+                    case Direction.ToRemote:
+                        client?.Upload(this._localPath, this._remotePath, 0);
+                        break;
+                    case Direction.ToLocal:
+                        client?.Download(this._localPath, this._remotePath, 0);
+                        break;
+                }
+
+            }
+            catch (Exception exception)
+            {
+                LabelFileName.Content += exception.Message;
+            }
+
         }
     }
     public enum Direction

@@ -99,7 +99,7 @@ namespace UI.Views
         {
             String path = NavigationLabel.Text;
             if (String.IsNullOrEmpty(path)) path = "/";
-            if (path[path.Length - 1] != '/') path += '/';
+            if (path[^1] != '/') path += '/';
 
             try
             {
@@ -153,16 +153,25 @@ namespace UI.Views
         {
             string localPath = MainWindow.GlobalLocalResourceNavigation.NavigationLabel.Text;
 
+            String remotePath = NavigationLabel.Text;
+            if (String.IsNullOrEmpty(remotePath)) remotePath = "/";
+            while (remotePath.EndsWith('/')) remotePath = remotePath.Substring(0, remotePath.Length - 1);
+            remotePath += '/';
+
             foreach (var anItem in NavigationList.SelectedItems)
             {
                 if (anItem is ResourceItem t)
                 {
-                    this.AddToTaskList(localPath, t.FilePath);
+                    if (t.Type != 0 && t.Type != 1) continue;
+                    string name = t.FilePath;
+                    while (name.StartsWith('/')) name = name.Substring(1);
+
+                    this.AddToTaskList(Path.Join(localPath, name), remotePath + name, t.Type == 1);
                 }
             };
         }
 
-        private void AddToTaskList(string localPath, string remotePath)
+        private void AddToTaskList(string localPath, string remotePath, bool isFolder)
         {
             try
             {
@@ -172,13 +181,21 @@ namespace UI.Views
                 {
                     if (fileInfo.IsFolder)
                     {
-                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName);
+                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.IsFolder);
                     }
                     else
                     {
-                        MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
-                            new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
-                        );
+                        if (isFolder) {
+                            MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
+                                new TransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.FileName)
+                            );
+                        }
+                        else
+                        { 
+                            MainWindow.GlobalTaskList.ListViewTaskList.Items.Add(
+                                new TransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName)
+                            );
+                        }
                         MainWindow.GlobalTaskListWorker.ReleaseOne();
                     }
                 }

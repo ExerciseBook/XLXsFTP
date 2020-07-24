@@ -36,7 +36,7 @@ namespace UI.FTP
                 object t = MainWindow.GlobalTaskList.ListViewTaskList.Items[0];
                 if (t is TransmitTask aTask)
                 {
-                    
+                    aTask.Execute();
                 }
 
                 Thread.Sleep(100);
