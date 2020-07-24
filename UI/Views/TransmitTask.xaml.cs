@@ -45,9 +45,13 @@ namespace UI.Views
             switch (direction)
             {
                 case Direction.ToRemote :
+                    ProcessBar.HorizontalAlignment = HorizontalAlignment.Left;
+                    ProcessBar.Width = 0;
                     LabelFileName.Content = '→';
                     break;
                 case Direction.ToLocal :
+                    ProcessBar.HorizontalAlignment = HorizontalAlignment.Right;
+                    ProcessBar.Width = 0;
                     LabelFileName.Content = '←';
                     break;
             }
@@ -98,6 +102,34 @@ namespace UI.Views
             }
 
             this._occupyFlag.ReleaseOccupation();
+        }
+
+        public void UpdateProcess(long done, long total)
+        {
+            SolidColorBrush first = Brushes.Blue;
+            first.Opacity = 0.5;
+
+            SolidColorBrush second = Brushes.Aqua;
+
+            double process = (double)done / total;
+
+            SolidColorBrush result = MixColor(second, first, process);
+
+            ProcessBar.Background = result;
+            ProcessBar.Width = ProcessBarBorder.ActualWidth * process;
+        }
+
+        private SolidColorBrush MixColor(SolidColorBrush colorA, SolidColorBrush colorB, double aValue)
+        {
+            byte a, r, g, b;
+            double bValue = 1 - aValue;
+
+            a = (byte)(colorA.Color.A * aValue + colorA.Color.A * bValue);
+            r = (byte)(colorA.Color.R * aValue + colorA.Color.R * bValue);
+            g = (byte)(colorA.Color.G * aValue + colorA.Color.G * bValue);
+            b = (byte)(colorA.Color.B * aValue + colorA.Color.B * bValue);
+
+            return new SolidColorBrush(Color.FromArgb(a, r, g, b));
         }
 
         private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
