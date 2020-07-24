@@ -9,28 +9,29 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" MaxHeight="64"/>
+            <RowDefinition Height="1*" MaxHeight="64px"/>
             <RowDefinition Height="1*" MaxHeight="1px"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="12px"/>
+            <ColumnDefinition Width="1*" MaxWidth="4px"/>
+            <ColumnDefinition Width="1*" MaxWidth="8px"/>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="1*" MaxWidth="12px"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Row="0" Column="1">
+        <Grid Row="0" Column="2">
             <TextBox x:Name="NavigationLabel" Background="Transparent" BorderThickness="0"
                      TextChanged="NavigationLabel_OnTextChanged"
                      VerticalAlignment="Bottom"/>
         </Grid>
 
-        <Grid Row="1" Column="1">
+        <Grid Row="1" Column="2">
             <Border BorderThickness="0.25" BorderBrush="White"/>
         </Grid>
 
-        <Grid Row="2" Column="0" ColumnSpan="2">
+        <Grid Row="2" Column="1" ColumnSpan="2">
             <ListView Background="Transparent" x:Name="NavigationList" 
                       BorderThickness="0"
                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -49,7 +50,7 @@
             </ListView>
         </Grid>
 
-        <Grid Row="2" Column="2" x:Name="NavigationScrollBarBorder"
+        <Grid Row="2" Column="3" x:Name="NavigationScrollBarBorder"
               Background="Transparent"
               MouseLeftButtonDown="NavigationScrollBar_MouseDown"
               MouseLeftButtonUp="NavigationScrollBar_MouseUp"
