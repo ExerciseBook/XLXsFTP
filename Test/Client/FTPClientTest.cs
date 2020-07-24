@@ -27,12 +27,17 @@ namespace Test.Client
 
             // 随便生成个文件名
             string filename = "/" + Guid.NewGuid().ToString() + ".txt";
-            
+
+            // 测试文件名
+            string testFile = "test.txt";
+
             // 本地文件路径
-            string localPath = "E:\\test.txt";
+            string localDir = @"E:\";
+            string localPath = localDir + testFile;
 
             // 远程文件路径
-            string remotePath = "/" + "test.txt";
+            string remoteDir = "/temp2/temp3/temp44/temp55/";
+            string remotePath = remoteDir + testFile;
 
             // 随便生成个文件数据
             string fileContents = Guid.NewGuid().ToString() + "\r\n" + Guid.NewGuid().ToString();
@@ -82,11 +87,11 @@ namespace Test.Client
             }
 
             // 测试目录列表（路径上传）
-            list = TestList(client, "/");
+            list = TestList(client, remoteDir);
             flag = 0;
             foreach (var aFileInfo in list)
             {
-                if (aFileInfo.FileName == remotePath.Substring(1))
+                if (aFileInfo.FileName == testFile)
                 {
                     Assert.AreEqual(localFilesize, aFileInfo.Size);
                     flag = 1;
@@ -119,9 +124,10 @@ namespace Test.Client
             }
 
             // 测试文件是否一致（路径下载）
+            list = TestList(client, remoteDir);
             foreach (var aFileInfo in list)
             {
-                if (aFileInfo.FileName == remotePath.Substring(1))
+                if (aFileInfo.FileName == testFile)
                 {
                     Assert.AreEqual(downloadFilesize, aFileInfo.Size);
                     break;
