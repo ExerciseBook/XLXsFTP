@@ -382,12 +382,20 @@ namespace FTPClient.Client
                 if (offset == 0) fs = new FileStream(localPath, FileMode.Create, FileAccess.Write);
                 else fs = new FileStream(localPath, FileMode.Append, FileAccess.Write);
 
+                int buffsize = 1048576;
+                byte[] buff = new byte[buffsize];
+
                 while (start < fileSize)
                 {
-                    if (ProcessUpdate != null) ProcessUpdate(start, fileSize);
-
-                    long buffsize = Math.Min(fileSize - start, 2);
-                    byte[] buff = new byte[buffsize];
+                    if (fileSize - start < buffsize)
+                    {
+                        buff = new byte[fileSize - start];
+                        // 接收数据
+                        dataSocket.Receive(buff);
+                        // 写入本地文件
+                        fs.Write(buff, 0, buff.Length);
+                        break;
+                    }
 
                     // 接收数据
                     dataSocket.Receive(buff);
