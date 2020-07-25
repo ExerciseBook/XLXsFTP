@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -65,6 +66,10 @@ namespace UI.Views
                 UInt16 port;
 
                 Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+
+                username = HttpUtility.UrlDecode(username);
+                password = HttpUtility.UrlDecode(password);
+
                 IPEndPoint server = Helpers.Helper.ParseIPEndPoint(host, port);
                 Client = new Client(server, username, password);
                 Client.Connect();
