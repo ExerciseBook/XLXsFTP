@@ -54,7 +54,8 @@ namespace FTPClient.Client
 
             public FileModifiedAt(SystemType systemType, string s, string s1, string s2)
             {
-                if (systemType != SystemType.Unix) throw new ArgumentException("Invalid argument found when parsing LIST.");
+                if (systemType != SystemType.Unix)
+                    throw new ArgumentException("Invalid argument found when parsing LIST.");
 
                 this._time = s2.Contains(":")
                     ? DateTime.Parse("" + this._now.Year + s + ' ' + s1 + ' ' + s2 + ':' + "00")
@@ -64,7 +65,8 @@ namespace FTPClient.Client
 
             public FileModifiedAt(SystemType systemType, string s, string s1)
             {
-                if (systemType != SystemType.Windows) throw new ArgumentException("Invalid argument found when parsing LIST.");
+                if (systemType != SystemType.Windows)
+                    throw new ArgumentException("Invalid argument found when parsing LIST.");
 
                 string dateTime = "";
                 string[] date = s.Split('-');
@@ -166,7 +168,6 @@ namespace FTPClient.Client
                     i++;
                     s[i] = "" + line[p];
                     continue;
-
                 }
 
                 if (flag == 1)
@@ -190,7 +191,7 @@ namespace FTPClient.Client
                     this.Owner = s[2];
                     this.Group = s[3];
                     this.Size = this.IsFolder ? 0 : Int64.Parse(s[4]);
-                    this.ModifiedAt = new FileModifiedAt(serverSystemType,s[5], s[6], s[7]);
+                    this.ModifiedAt = new FileModifiedAt(serverSystemType, s[5], s[6], s[7]);
                     this.FileName = s[8];
                     break;
                 case SystemType.Windows:
@@ -205,8 +206,6 @@ namespace FTPClient.Client
                     this.FileName = s[3];
                     break;
             }
-
-
         }
     }
 }

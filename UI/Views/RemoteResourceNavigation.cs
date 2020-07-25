@@ -50,8 +50,8 @@ namespace UI.Views
         {
             NavigationName.Content = "Remote";
 
-            Grid top = (Grid)NavigationLabel.Parent;
-            Grid bottom = (Grid)NavigationList.Parent;
+            Grid top = (Grid) NavigationLabel.Parent;
+            Grid bottom = (Grid) NavigationList.Parent;
 
             // 隐藏地址栏
             NavigationLabel.Visibility = Visibility.Hidden;
@@ -78,7 +78,9 @@ namespace UI.Views
         {
             switch (e.Key)
             {
-                case Key.Enter: this.Connect(); break;
+                case Key.Enter:
+                    this.Connect();
+                    break;
             }
         }
 
@@ -91,7 +93,8 @@ namespace UI.Views
                 String username, password, defaultPath, host;
                 UInt16 port;
 
-                Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+                Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password,
+                    out defaultPath);
 
                 username = HttpUtility.UrlDecode(username);
                 password = HttpUtility.UrlDecode(password);
@@ -126,8 +129,8 @@ namespace UI.Views
                 NavigationList.Items.Add(exception.GetType().ToString());
                 NavigationList.Items.Add(exception.Message);
             }
-
         }
+
         public override void NavigationRefresh()
         {
             String path = NavigationLabel.Text;
@@ -146,12 +149,12 @@ namespace UI.Views
                 {
                     NavigationList.Items.Add(new ResourceItem(
                         NavigationLabel,
-                        fileInfo.IsFolder ? 1 : 0, 
+                        fileInfo.IsFolder ? 1 : 0,
                         path + fileInfo.FileName,
                         fileInfo.FileName,
                         fileInfo.Size,
                         fileInfo.ModifiedAt.ToString()
-                        ));
+                    ));
 
                     //NavigationList.Items.Add((fileInfo.IsFolder ? "/" : "") + fileInfo.FileName);
                 }
@@ -179,7 +182,6 @@ namespace UI.Views
                 NavigationList.Items.Add(exception.GetType().ToString());
                 NavigationList.Items.Add(exception.Message);
             }
-
         }
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -201,7 +203,9 @@ namespace UI.Views
 
                     this.AddToTaskList(Path.Join(localPath, name), remotePath + name, t.Type == 1);
                 }
-            };
+            }
+
+            ;
         }
 
         private void AddToTaskList(string localPath, string remotePath, bool isFolder)
@@ -217,7 +221,8 @@ namespace UI.Views
                         AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
                             remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
 
-                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName, fileInfo.IsFolder);
+                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName,
+                            fileInfo.IsFolder);
                     }
                     else
                     {
@@ -239,5 +244,4 @@ namespace UI.Views
             }
         }
     }
-
 }

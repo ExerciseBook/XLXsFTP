@@ -58,12 +58,16 @@ namespace UI.Views
             if (this._occupyFlag.TryOccupied())
             {
                 _addressBox.Text = "ftp://";
-                if (!String.IsNullOrEmpty(TextBoxUsername.Text)) _addressBox.Text += HttpUtility.UrlEncode(TextBoxUsername.Text);
-                if (!String.IsNullOrEmpty(TextBoxPassword.Text)) _addressBox.Text += ":" + HttpUtility.UrlEncode(TextBoxPassword.Text);
-                if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text)) _addressBox.Text += "@";
+                if (!String.IsNullOrEmpty(TextBoxUsername.Text))
+                    _addressBox.Text += HttpUtility.UrlEncode(TextBoxUsername.Text);
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text))
+                    _addressBox.Text += ":" + HttpUtility.UrlEncode(TextBoxPassword.Text);
+                if (!String.IsNullOrEmpty(TextBoxPassword.Text) || !String.IsNullOrEmpty(TextBoxUsername.Text))
+                    _addressBox.Text += "@";
                 if (!String.IsNullOrEmpty(TextBoxHost.Text)) _addressBox.Text += TextBoxHost.Text;
-                if (!String.IsNullOrEmpty(TextBoxPath.Text)) _addressBox.Text += 
-                    TextBoxPath.Text.StartsWith('/') ? TextBoxPath.Text : "/" + TextBoxPath.Text;
+                if (!String.IsNullOrEmpty(TextBoxPath.Text))
+                    _addressBox.Text +=
+                        TextBoxPath.Text.StartsWith('/') ? TextBoxPath.Text : "/" + TextBoxPath.Text;
 
                 this._occupyFlag.ReleaseOccupation();
             }
@@ -79,7 +83,8 @@ namespace UI.Views
                     String username, password, defaultPath, host;
                     UInt16 port;
 
-                    Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password, out defaultPath);
+                    Helpers.Helper.ParseAddress(rawaddress, out host, out port, out username, out password,
+                        out defaultPath);
 
                     TextBoxUsername.Text = HttpUtility.UrlDecode(username);
                     TextBoxPassword.Text = HttpUtility.UrlDecode(password);

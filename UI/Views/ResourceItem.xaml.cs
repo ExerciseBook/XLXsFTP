@@ -69,14 +69,14 @@ namespace UI.Views
 
         public string ModifiedTime
         {
-            get => this._modifiedTime ;
+            get => this._modifiedTime;
             private set
             {
                 this._modifiedTime = value;
                 LabelModifiedTime.Content = value;
             }
         }
-        
+
         public ResourceItem(TextBox navigationLabel, int type, string filePath, string fileName, long size,
             string modifiedTime)
         {
@@ -124,6 +124,7 @@ namespace UI.Views
                     {
                         // ignore
                     }
+
                     break;
                 case 4:
                     string nowPath = this.FilePath;
@@ -133,7 +134,7 @@ namespace UI.Views
 
                     int aidx = nowPath.LastIndexOf('/');
                     int bidx = nowPath.LastIndexOf('\\');
-                    int idx = Math.Min( aidx == -1 ? Int32.MaxValue : aidx, bidx == -1 ? Int32.MaxValue : bidx);
+                    int idx = Math.Min(aidx == -1 ? Int32.MaxValue : aidx, bidx == -1 ? Int32.MaxValue : bidx);
                     string newPath = nowPath.Substring(0, idx);
                     if (String.IsNullOrEmpty(newPath)) newPath = "/";
                     this._navigationLavel.Text = newPath;

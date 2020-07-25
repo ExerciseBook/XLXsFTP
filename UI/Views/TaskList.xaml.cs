@@ -70,10 +70,11 @@ namespace UI.Views
                     : TaskListScrollBarBorder.ActualHeight * process;
                 TaskListScrollBar.Height = newHight;
 
-                int newOpacity = (int)(0xE0 * process) + 0x1F;
-                TaskListScrollBar.Background = new SolidColorBrush(Color.FromArgb((byte)newOpacity, 0, 0, 0));
-            };
+                int newOpacity = (int) (0xE0 * process) + 0x1F;
+                TaskListScrollBar.Background = new SolidColorBrush(Color.FromArgb((byte) newOpacity, 0, 0, 0));
+            }
 
+            ;
         }
 
         private int _scrollStatus = 0;
@@ -105,10 +106,9 @@ namespace UI.Views
 
             double precent = p.Y / height;
 
-            int idx = (int)(ListViewTaskList.Items.Count * precent);
+            int idx = (int) (ListViewTaskList.Items.Count * precent);
             idx = ListViewTaskList.Items.Count == idx ? idx - 1 : idx;
             ListViewTaskList.ScrollIntoView(ListViewTaskList.Items[idx]);
-
         }
 
         private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
@@ -117,25 +117,26 @@ namespace UI.Views
 
         private void TaskList_Delete(object sender, RoutedEventArgs e)
         {
-           if (Mutex == null) return;
-           //Mutex.WaitOne();
-           
-           List<TransmitTask> deleteList = new List<TransmitTask>();
-           
-           foreach (var anItem in ListViewTaskList.SelectedItems)
-           {
-               if (anItem is TransmitTask t)
-               {
-                   /* if (t.CanDelete) */ deleteList.Add(t);
-               }
-           };
-           
-           int n = deleteList.Count;
-           for (int i = 0; i < n; i++) deleteList[i].Delete();
-           
-           //Mutex.Release();
+            if (Mutex == null) return;
+            //Mutex.WaitOne();
+
+            List<TransmitTask> deleteList = new List<TransmitTask>();
+
+            foreach (var anItem in ListViewTaskList.SelectedItems)
+            {
+                if (anItem is TransmitTask t)
+                {
+                    /* if (t.CanDelete) */
+                    deleteList.Add(t);
+                }
+            }
+
+            ;
+
+            int n = deleteList.Count;
+            for (int i = 0; i < n; i++) deleteList[i].Delete();
+
+            //Mutex.Release();
         }
     }
-
-
 }

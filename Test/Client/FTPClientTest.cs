@@ -38,7 +38,6 @@ namespace Test.Client
     [TestClass]
     public class FTPClientTest
     {
-
         [TestMethod]
         public void TestFTPClientAll()
         {
@@ -91,6 +90,7 @@ namespace Test.Client
                     break;
                 }
             }
+
             Assert.AreEqual(1, flag);
 
             // 测试本地文件上传（路径上传）
@@ -103,7 +103,7 @@ namespace Test.Client
                 try
                 {
                     byte[] buff = new byte[fs.Length];
-                    fs.Read(buff, 0, (int)fs.Length);
+                    fs.Read(buff, 0, (int) fs.Length);
                     localFilesize = buff.Length;
                 }
                 catch (Exception ex)
@@ -124,6 +124,7 @@ namespace Test.Client
                     break;
                 }
             }
+
             Assert.AreEqual(1, flag);
 
             // 测试文件下载
@@ -140,7 +141,7 @@ namespace Test.Client
                 try
                 {
                     byte[] buff = new byte[fs.Length];
-                    fs.Read(buff, 0, (int)fs.Length);
+                    fs.Read(buff, 0, (int) fs.Length);
                     downloadFilesize = buff.Length;
                 }
                 catch (Exception ex)
@@ -174,8 +175,8 @@ namespace Test.Client
                     break;
                 }
             }
-            Assert.AreEqual(0, flag);
 
+            Assert.AreEqual(0, flag);
         }
 
         private void TestUpload(Client client, string filename, byte[] fileContentsBytes)

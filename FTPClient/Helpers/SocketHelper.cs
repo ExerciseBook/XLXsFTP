@@ -65,7 +65,8 @@ namespace FTPClient.Helpers
                 if (ret[i] < '0' || ret[i] > '9')
                 {
                     flag = false;
-                } else if (flag)
+                }
+                else if (flag)
                 {
                     status = status * 10 + ret[i] - 48;
                 }
@@ -81,6 +82,7 @@ namespace FTPClient.Helpers
         }
 
         private readonly byte[] _bytesCrlf = Encoding.ASCII.GetBytes("\r\n");
+
         public void Writeln(byte[] bytes)
         {
             _s.Send(bytes);

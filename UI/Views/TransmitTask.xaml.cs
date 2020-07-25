@@ -46,6 +46,7 @@ namespace UI.Views
         private readonly string _remotePath = null;
 
         private readonly string _fileName = null;
+
         /// <summary>
         /// 0 文件
         /// 1 文件夹
@@ -67,15 +68,15 @@ namespace UI.Views
             this._type = type;
 
             this._status = 0;
-            
+
             switch (direction)
             {
-                case Direction.ToRemote :
+                case Direction.ToRemote:
                     ProcessBar.HorizontalAlignment = HorizontalAlignment.Left;
                     ProcessBar.Width = 0;
                     LabelFileName.Content = '→';
                     break;
-                case Direction.ToLocal :
+                case Direction.ToLocal:
                     ProcessBar.HorizontalAlignment = HorizontalAlignment.Right;
                     ProcessBar.Width = 0;
                     LabelFileName.Content = '←';
@@ -93,7 +94,6 @@ namespace UI.Views
 
             try
             {
-                
                 if (this._status != 0) return;
                 this._status = 1;
 
@@ -116,6 +116,7 @@ namespace UI.Views
                         {
                             client?.CreateDirectory(this._remotePath);
                         }
+
                         break;
                     }
 
@@ -125,7 +126,8 @@ namespace UI.Views
                         {
                             client?.Download(this._localPath, this._remotePath, 0);
                         }
-                        else if (this._type == 1) { 
+                        else if (this._type == 1)
+                        {
                             // 判断本地目录是否存在
                             if (!Directory.Exists(this._localPath))
                             {
@@ -133,6 +135,7 @@ namespace UI.Views
                                 Directory.CreateDirectory(this._localPath);
                             }
                         }
+
                         break;
                     }
                 }
@@ -145,14 +148,10 @@ namespace UI.Views
                         client.Disconnect();
                     }
                 }
-
             }
             catch (Exception exception)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    LabelFileName.Content += exception.Message;
-                });
+                Application.Current.Dispatcher.Invoke(() => { LabelFileName.Content += exception.Message; });
             }
 
             this._occupyFlag.ReleaseOccupation();
@@ -167,14 +166,13 @@ namespace UI.Views
 
                 SolidColorBrush second = Brushes.Aqua;
 
-                double process = (double)done / total;
+                double process = (double) done / total;
 
                 SolidColorBrush result = this.MixColor(second, first, process);
 
                 ProcessBar.Background = result;
                 ProcessBar.Width = ProcessBarBorder.ActualWidth * process;
             });
-           
         }
 
         private SolidColorBrush MixColor(SolidColorBrush colorA, SolidColorBrush colorB, double aValue)
@@ -182,16 +180,16 @@ namespace UI.Views
             byte a, r, g, b;
             double bValue = 1 - aValue;
 
-            a = (byte)(colorA.Color.A * aValue + colorB.Color.A * bValue);
-            r = (byte)(colorA.Color.R * aValue + colorB.Color.R * bValue);
-            g = (byte)(colorA.Color.G * aValue + colorB.Color.G * bValue);
-            b = (byte)(colorA.Color.B * aValue + colorB.Color.B * bValue);
+            a = (byte) (colorA.Color.A * aValue + colorB.Color.A * bValue);
+            r = (byte) (colorA.Color.R * aValue + colorB.Color.R * bValue);
+            g = (byte) (colorA.Color.G * aValue + colorB.Color.G * bValue);
+            b = (byte) (colorA.Color.B * aValue + colorB.Color.B * bValue);
 
             return new SolidColorBrush(Color.FromArgb(a, r, g, b));
         }
 
         private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
-        
+
         private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
 
 
@@ -200,7 +198,8 @@ namespace UI.Views
         public void Delete()
         {
             // if (!this._occupyFlag.TryOccupied()) return;
-            if (this._status == 0) { 
+            if (this._status == 0)
+            {
                 Sem.WaitOne();
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
             }
@@ -210,8 +209,8 @@ namespace UI.Views
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
             }
         }
-
     }
+
     public enum Direction
     {
         Null = 0,

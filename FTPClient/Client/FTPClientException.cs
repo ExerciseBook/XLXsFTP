@@ -40,4 +40,4 @@ namespace FTPClient.Client
             this._status = status;
         }
     }
-} 
+}

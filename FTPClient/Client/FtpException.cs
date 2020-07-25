@@ -32,7 +32,6 @@ namespace FTPClient.Client
     {
         public FTPException(string s) : base(s)
         {
-
         }
     }
 }

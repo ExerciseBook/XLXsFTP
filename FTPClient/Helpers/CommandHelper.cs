@@ -79,13 +79,14 @@ namespace FTPClient.Helpers
         /// <returns></returns>
         public static Socket AddressParserAndConnect(int mode, string line, IPAddress ip = null)
         {
-            if(mode == 0)
+            if (mode == 0)
             {
                 IPEndPoint IPE = AddressParser(line);
                 Socket dataSocket = new Socket(IPE.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 dataSocket.Connect(IPE);
                 return dataSocket;
-            }else if(mode == 1)
+            }
+            else if (mode == 1)
             {
                 int port = Convert.ToInt32(GetMiddleText(line, "|||", "|"));
                 IPEndPoint IPE = new IPEndPoint(ip, port);
@@ -97,8 +98,6 @@ namespace FTPClient.Helpers
             {
                 throw new Exception("Unknown mode.");
             }
-            
         }
-
     }
 }

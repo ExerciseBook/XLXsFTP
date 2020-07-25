@@ -62,7 +62,6 @@ namespace UI.Views
                     NavigationList.Items.Add(new ResourceItem(NavigationLabel, 0, file.FullName, file.Name, file.Length,
                         Helpers.Helper.FileDateTimeFormat(file.LastWriteTime)));
                 }
-
             }
             catch (Exception exception)
             {
@@ -70,7 +69,6 @@ namespace UI.Views
 
                 NavigationList.Items.Add(exception.Message);
             }
-
         }
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -92,9 +90,10 @@ namespace UI.Views
 
                     this.AddToTaskList(t.FilePath, remotePath + t.FileName);
                 }
-            };
-        }
+            }
 
+            ;
+        }
 
 
         private void AddToTaskList(string localPath, string remotePath)
@@ -115,8 +114,9 @@ namespace UI.Views
 
                     foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
                     {
-                        AddTransmitTask(Direction.ToRemote, Directory.FullName, remotePath + '/' + Directory.Name, Directory.Name, 1);
-                        
+                        AddTransmitTask(Direction.ToRemote, Directory.FullName, remotePath + '/' + Directory.Name,
+                            Directory.Name, 1);
+
                         this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
                     }
 
@@ -131,6 +131,5 @@ namespace UI.Views
                 AddTransmitTask(Direction.Null, localPath, null, excpetion.Message, 0);
             }
         }
-
     }
 }
