@@ -76,7 +76,8 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Transmit" Click="MenuItem_OnClick" />
+                        <MenuItem Header="Transmit" Click="MenuItem_Transmit_OnClick" />
+                        <MenuItem Header="Delete" Click="MenuItem_Delete_OnClick" />
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

@@ -117,7 +117,8 @@ namespace UI.Views
             NavigationList.ScrollIntoView(NavigationList.Items[idx]);
         }
 
-        public abstract void MenuItem_OnClick(object sender, RoutedEventArgs e);
+        public abstract void MenuItem_Transmit_OnClick(object sender, RoutedEventArgs e);
+        public abstract void MenuItem_Delete_OnClick(object sender, RoutedEventArgs e);
 
         private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
 

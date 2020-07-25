@@ -71,15 +71,19 @@ namespace UI.Views
 
             switch (direction)
             {
-                case Direction.ToRemote:
+                case Direction.ToRemote :
                     ProcessBar.HorizontalAlignment = HorizontalAlignment.Left;
                     ProcessBar.Width = 0;
                     LabelFileName.Content = '→';
                     break;
-                case Direction.ToLocal:
+                case Direction.ToLocal :
                     ProcessBar.HorizontalAlignment = HorizontalAlignment.Right;
                     ProcessBar.Width = 0;
                     LabelFileName.Content = '←';
+                    break;
+                case Direction.DeleteRemote :
+                case Direction.DeleteLocal :
+                    LabelFileName.Content = '×';
                     break;
             }
 
@@ -97,7 +101,7 @@ namespace UI.Views
                 if (this._status != 0) return;
                 this._status = 1;
 
-                if (this._direction != Direction.Null)
+                if (this._direction == Direction.ToRemote || this._direction == Direction.ToLocal || this._direction == Direction.DeleteRemote)
                 {
                     client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
                     client.Connect();
@@ -138,9 +142,28 @@ namespace UI.Views
 
                         break;
                     }
+
+                    case Direction.DeleteRemote:
+                    {
+                        //TODO
+                        break;
+                    }
+
+                    case Direction.DeleteLocal:
+                    {
+                        if (this._type == 0)
+                        {
+                            if (File.Exists(this._localPath)) File.Delete(this._localPath);
+                        }
+                        else if (this._type == 1)
+                        {
+                            if (Directory.Exists(this._localPath)) Directory.Delete(this._localPath);
+                        }
+                        break;
+                    }
                 }
 
-                if (this._direction != Direction.Null)
+                if (this._direction == Direction.ToRemote || this._direction == Direction.ToLocal || this._direction == Direction.DeleteRemote)
                 {
                     if (client != null)
                     {
@@ -205,7 +228,7 @@ namespace UI.Views
             }
             else
             {
-                this.client.TerminateTransmissionTask();
+                this.client?.TerminateTransmissionTask();
                 MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
             }
         }
@@ -215,6 +238,8 @@ namespace UI.Views
     {
         Null = 0,
         ToRemote = 1,
-        ToLocal = 2
+        ToLocal = 2,
+        DeleteRemote = 3,
+        DeleteLocal = 4
     }
 }

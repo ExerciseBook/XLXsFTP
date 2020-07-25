@@ -133,6 +133,8 @@ namespace UI.Views
 
         public override void NavigationRefresh()
         {
+            if (Client == null || Client.Connected == false) return;
+
             String path = NavigationLabel.Text;
             if (String.IsNullOrEmpty(path)) path = "/";
             if (path[^1] != '/') path += '/';
@@ -184,7 +186,7 @@ namespace UI.Views
             }
         }
 
-        public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        public override void MenuItem_Transmit_OnClick(object sender, RoutedEventArgs e)
         {
             if (MainWindow.GlobalLocalResourceNavigation.Status != 0) return;
             string localPath = MainWindow.GlobalLocalResourceNavigation.NavigationLabel.Text;
@@ -202,14 +204,32 @@ namespace UI.Views
                     string name = t.FilePath;
                     while (name.StartsWith('/')) name = name.Substring(1);
 
-                    this.AddToTaskList(Path.Join(localPath, name), remotePath + name, t.Type == 1);
+                    this.AddToCreateTaskList(Path.Join(localPath, name), remotePath + name, t.Type == 1);
                 }
             }
-
-            ;
         }
 
-        private void AddToTaskList(string localPath, string remotePath, bool isFolder)
+        public override void MenuItem_Delete_OnClick(object sender, RoutedEventArgs e)
+        {
+            String remotePath = NavigationLabel.Text;
+            if (String.IsNullOrEmpty(remotePath)) remotePath = "/";
+            while (remotePath.EndsWith('/')) remotePath = remotePath.Substring(0, remotePath.Length - 1);
+            remotePath += '/';
+
+            foreach (var anItem in NavigationList.SelectedItems)
+            {
+                if (anItem is ResourceItem t)
+                {
+                    if (t.Type != 0 && t.Type != 1) continue;
+                    string name = t.FilePath;
+                    while (name.StartsWith('/')) name = name.Substring(1);
+
+                    this.AddToDeleteTaskList(null, remotePath + name, t.Type == 1);
+                }
+            }
+        }
+
+        private void AddToCreateTaskList(string localPath, string remotePath, bool isFolder)
         {
             try
             {
@@ -222,7 +242,8 @@ namespace UI.Views
                         AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
                             remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
 
-                        AddToTaskList(Path.Join(localPath, fileInfo.FileName), remotePath + '/' + fileInfo.FileName,
+                        AddToCreateTaskList(Path.Join(localPath, fileInfo.FileName),
+                            remotePath + '/' + fileInfo.FileName,
                             fileInfo.IsFolder);
                     }
                     else
@@ -235,6 +256,43 @@ namespace UI.Views
                         else
                         {
                             AddTransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName, 0);
+                        }
+                    }
+                }
+            }
+            catch (Exception excpetion)
+            {
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message, 0);
+            }
+        }
+
+
+        private void AddToDeleteTaskList(string localPath, string remotePath, bool isFolder)
+        {
+            try
+            {
+                List<FileInfo> t = Client.List(remotePath);
+
+                foreach (FileInfo fileInfo in t)
+                {
+                    if (fileInfo.IsFolder)
+                    {
+                        AddToDeleteTaskList(null, remotePath + '/' + fileInfo.FileName,
+                            fileInfo.IsFolder);
+
+                        AddTransmitTask(Direction.DeleteRemote, null,
+                            remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
+                    }
+                    else
+                    {
+                        if (isFolder)
+                        {
+                            AddTransmitTask(Direction.DeleteRemote, null,
+                                remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 0);
+                        }
+                        else
+                        {
+                            AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileInfo.FileName, 0);
                         }
                     }
                 }

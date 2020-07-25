@@ -77,7 +77,7 @@ namespace UI.Views
             }
         }
 
-        public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        public override void MenuItem_Transmit_OnClick(object sender, RoutedEventArgs e)
         {
             if (MainWindow.GlobalRemoteResourceNavigation.Client == null) return;
             if (!MainWindow.GlobalRemoteResourceNavigation.Client.Connected) return;
@@ -94,15 +94,26 @@ namespace UI.Views
                 {
                     if (t.Type != 0 && t.Type != 1) continue;
 
-                    this.AddToTaskList(t.FilePath, remotePath + t.FileName);
+                    this.AddToCreateTaskList(t.FilePath, remotePath + t.FileName);
                 }
             }
-
-            ;
         }
 
+        public override void MenuItem_Delete_OnClick(object sender, RoutedEventArgs e)
+        {
 
-        private void AddToTaskList(string localPath, string remotePath)
+            foreach (var anItem in NavigationList.SelectedItems)
+            {
+                if (anItem is ResourceItem t)
+                {
+                    if (t.Type != 0 && t.Type != 1) continue;
+
+                    this.AddToDeleteTaskList(t.FilePath, null);
+                }
+            }
+        }
+
+        private void AddToCreateTaskList(string localPath, string remotePath)
         {
             try
             {
@@ -123,13 +134,52 @@ namespace UI.Views
                         AddTransmitTask(Direction.ToRemote, Directory.FullName, remotePath + '/' + Directory.Name,
                             Directory.Name, 1);
 
-                        this.AddToTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
+                        this.AddToCreateTaskList(Directory.FullName, remotePath + '/' + Directory.Name);
                     }
 
                     foreach (FileInfo file in folder.GetFiles("*.*"))
                     {
                         AddTransmitTask(Direction.ToRemote, file.FullName, remotePath + '/' + file.Name, file.Name, 0);
                     }
+                }
+            }
+            catch (UnauthorizedAccessException excpetion)
+            {
+                AddTransmitTask(Direction.Null, localPath, null, excpetion.Message, 0);
+            }
+        }
+
+
+        private void AddToDeleteTaskList(string localPath, string remotePath)
+        {
+            try
+            {
+                if (File.Exists(localPath))
+                {
+                    // 是文件
+                    FileInfo file = new FileInfo(localPath);
+
+                    AddTransmitTask(Direction.DeleteLocal, file.FullName, null, file.Name, 0);
+                }
+                else if (Directory.Exists(localPath))
+                {
+                    // 是文件夹
+                    DirectoryInfo folder = new DirectoryInfo(localPath);
+
+                    foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
+                    {
+                        this.AddToDeleteTaskList(Directory.FullName, null);
+
+                        AddTransmitTask(Direction.DeleteLocal, Directory.FullName, null,
+                            Directory.Name, 1);
+                    }
+
+                    foreach (FileInfo file in folder.GetFiles("*.*"))
+                    {
+                        AddTransmitTask(Direction.DeleteLocal, file.FullName, null, file.Name, 0);
+                    }
+
+                    AddTransmitTask(Direction.DeleteLocal, folder.FullName, null, folder.Name, 1);
                 }
             }
             catch (UnauthorizedAccessException excpetion)
