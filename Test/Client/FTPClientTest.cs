@@ -161,6 +161,11 @@ namespace Test.Client
                 }
             }
 
+            // 测试目录删除
+            string deleteDirectory = "/temp/deletetest";
+            client.CreateDirectory(deleteDirectory);
+            TestDeleteDirectory(client, deleteDirectory);
+
             // 测试文件删除
             TestDelete(client, filename);
 
@@ -202,6 +207,11 @@ namespace Test.Client
         private List<FileInfo> TestList(Client client, string s)
         {
             return client.List(s);
+        }
+
+        private void TestDeleteDirectory(Client client, string remotePath)
+        {
+            client.DeleteDirectory(remotePath);
         }
 
         private void TestDelete(Client client, string filename)

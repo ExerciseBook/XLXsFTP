@@ -171,6 +171,44 @@ namespace FTPClient.Client
                     i--;
                 }
             }
+
+            // CWD 切换工作区至根目录
+            _commandHelper.Writeln("CWD /");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+        }
+
+        /// <summary>
+        /// 删除目录
+        /// </summary>
+        /// <param name="remotePath"></param>
+        public void DeleteDirectory(string remotePath)
+        {
+            int status;
+            string line;
+
+            string[] folders = remotePath.Split('/');
+
+            // 切换工作区
+            for (int i = 0; i < folders.Length - 1; i++)
+            {
+                if (folders[i].Length == 0) continue;
+
+                // CWD 切换工作区 => 250
+                _commandHelper.Writeln("CWD " + folders[i]);
+                line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+
+                // 路径不存在
+                if (status != 250) throw new FTPClientException(status, line);
+            }
+
+            // 删除目录 => 250
+            _commandHelper.Writeln("RMD " + folders[folders.Length - 1]);
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if (status != 250) throw new FTPClientException(status, line);
+
+            // CWD 切换工作区至根目录
+            _commandHelper.Writeln("CWD /");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
         }
 
         /// <summary>
@@ -352,6 +390,10 @@ namespace FTPClient.Client
             // 226 or 250
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if ((status != 226) && (status != 250)) throw new FTPClientException(status, line);
+
+            // CWD 切换工作区至根目录
+            _commandHelper.Writeln("CWD /");
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
         }
 
         /// <summary>
