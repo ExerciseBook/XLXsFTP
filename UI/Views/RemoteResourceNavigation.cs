@@ -206,11 +206,11 @@ namespace UI.Views
 
                     if (t.Type == 1)
                     {
-                        this.AddToCreateTaskList( Path.Join(localPath, t.FileName), name, t.Type == 1);
+                        this.AddToCreateTaskList(Path.Join(localPath, t.FileName), name, t.Type == 1);
                     }
                     else
                     {
-                        this.AddToCreateTaskList(localPath,  name, t.Type == 1);
+                        this.AddToCreateTaskList(localPath, name, t.Type == 1);
                     }
                 }
             }
@@ -296,11 +296,13 @@ namespace UI.Views
                     {
                         if (isFolder)
                         {
-                            AddTransmitTask(Direction.DeleteRemote, null,remotePath + '/' + fileInfo.FileName, fileInfo.FileName, fileInfo.IsFolder ? 1 : 0);
+                            AddTransmitTask(Direction.DeleteRemote, null, remotePath + '/' + fileInfo.FileName,
+                                fileInfo.FileName, fileInfo.IsFolder ? 1 : 0);
                         }
                         else
                         {
-                            AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileInfo.FileName, fileInfo.IsFolder ? 1 : 0 );
+                            AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileInfo.FileName,
+                                fileInfo.IsFolder ? 1 : 0);
                         }
                     }
                 }
