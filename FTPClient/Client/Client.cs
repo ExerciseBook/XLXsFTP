@@ -112,7 +112,7 @@ namespace FTPClient.Client
                 dataSocket = CommandHelper.AddressParserAndConnect(1, dataConnection, _serverIpe.Address);
                 dataHelper = new SocketHelper(dataSocket);
             }
-            else if (status == 522)  //不支持EPSV,使用PASV
+            else if (status == 522) //不支持EPSV,使用PASV
             {
                 // PASV => 227;
                 _commandHelper.Writeln("PASV");
@@ -192,7 +192,7 @@ namespace FTPClient.Client
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 350) throw new FTPClientException(status, line);
-            
+
             // STOR 路径 => 150
             _commandHelper.Writeln("STOR " + filename);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
@@ -212,17 +212,21 @@ namespace FTPClient.Client
                         tmp[j - i] = fileContentsBytes[j];
                         j++;
                     }
+
                     dataSocket.Send(tmp);
                     break;
                 }
+
                 while (j < i + datasize)
                 {
                     data[j - i] = fileContentsBytes[j];
                     j++;
                 }
+
                 dataSocket.Send(data);
                 i = j - 1;
             }
+
             // 关闭socket连接
             dataSocket.Close();
 
@@ -237,7 +241,7 @@ namespace FTPClient.Client
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
         /// <param name="offset"></param>
-        public async void Upload(string localPath, string remotePath, long offset = 0)
+        public void Upload(string localPath, string remotePath, long offset = 0)
         {
             string line;
             int status;
@@ -300,7 +304,7 @@ namespace FTPClient.Client
                     fs.Position = start;
 
                     // 读取一块文件
-                    int tot = fs.Read(buff, 0, (int)Math.Min(buffsize, fs.Length - start));
+                    int tot = fs.Read(buff, 0, (int) Math.Min(buffsize, fs.Length - start));
 
                     // 上传
                     int datasize = 1024;
@@ -308,7 +312,7 @@ namespace FTPClient.Client
                     for (long i = 0; i < tot; i++)
                     {
                         long j = i;
-                        if ((long)tot - i < 1024)
+                        if ((long) tot - i < 1024)
                         {
                             byte[] tmp = new byte[tot - i];
                             while (j < tot)
@@ -316,14 +320,17 @@ namespace FTPClient.Client
                                 tmp[j - i] = buff[j];
                                 j++;
                             }
+
                             dataSocket.Send(tmp);
                             break;
                         }
+
                         while (j < i + datasize)
                         {
                             data[j - i] = buff[j];
                             j++;
                         }
+
                         dataSocket.Send(data);
                         i = j - 1;
                     }
@@ -331,6 +338,7 @@ namespace FTPClient.Client
                     // 更新下一次读取的起点
                     start += tot;
                 }
+
                 fs.Close();
             }
             catch (Exception ex)
@@ -397,7 +405,7 @@ namespace FTPClient.Client
         /// <param name="localPath"></param>
         /// <param name="remotePath"></param>
         /// <param name="offset"></param>
-        public async void Download(string localPath, string remotePath, long offset = 0)
+        public void Download(string localPath, string remotePath, long offset = 0)
         {
             int status;
             string line;
@@ -425,11 +433,8 @@ namespace FTPClient.Client
             if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 获取本地目录
-            string[] folders = localPath.Split('\\');
-            string localDirectory = "";
-            for (int i = 0; i < folders.Length - 1; i++) localDirectory += folders[i] + '\\';
-
-            // 判断本地目录是否存在
+            string localDirectory = Directory.GetParent(localPath).FullName;
+            // 判断目录是否存在
             if (!Directory.Exists(localDirectory))
             {
                 // 创建目录
@@ -449,7 +454,8 @@ namespace FTPClient.Client
 
                 while (start < fileSize && this.Working)
                 {
-                    if (ProcessUpdate != null) ProcessUpdate(start, fs.Length);
+                    if (ProcessUpdate != null) ProcessUpdate(start, fileSize);
+
                     // 接收数据
                     int length = dataSocket.Receive(buff);
                     fs.Write(buff, 0, length);
@@ -463,11 +469,12 @@ namespace FTPClient.Client
                 throw ex;
             }
 
-            // 226 => 结束数据连接
-            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if ((status != 226) && (status != 250)) throw new FTPClientException(status, line);
             dataSocket.Close();
 
+            // 226 => 结束数据连接
+            line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+            if ((status != 226) && (status != 250) && (status != 550)) throw new FTPClientException(status, line);
+            if (status == 550) throw new FTPClientException(status, line);
         }
 
         /// <summary>
@@ -501,7 +508,7 @@ namespace FTPClient.Client
             // 执行指令
             _commandHelper.Writeln("LIST " + path);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 150 && status != 125)  throw new FTPClientException(status, line);
+            if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 列出信息
             List<FileInfo> ret = new List<FileInfo>();

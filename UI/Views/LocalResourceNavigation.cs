@@ -32,6 +32,8 @@ namespace UI.Views
 {
     public class LocalResourceNavigation : ResourceNavigation
     {
+        public int Status { get; private set; } = -1;
+
         public LocalResourceNavigation() : base()
         {
             NavigationLabel.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -62,9 +64,13 @@ namespace UI.Views
                     NavigationList.Items.Add(new ResourceItem(NavigationLabel, 0, file.FullName, file.Name, file.Length,
                         Helpers.Helper.FileDateTimeFormat(file.LastWriteTime)));
                 }
+
+                this.Status = 0;
             }
             catch (Exception exception)
             {
+                this.Status = -1;
+
                 NavigationList.Items.Clear();
 
                 NavigationList.Items.Add(exception.Message);

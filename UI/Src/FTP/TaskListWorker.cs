@@ -68,7 +68,7 @@ namespace UI.FTP
                     aTask.Execute();
                 }
 
-                Thread.Sleep(100);
+                Thread.Sleep(200);
                 Application.Current?.Dispatcher.Invoke(() =>
                 {
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(t);
@@ -77,9 +77,10 @@ namespace UI.FTP
                         MainWindow.GlobalRemoteResourceNavigation.NavigationRefresh();
                         MainWindow.GlobalLocalResourceNavigation.NavigationRefresh();
                     }
+
+                    Thread.Sleep(200);
                     Mutex.Release();
                 });
-
             }
         }
 

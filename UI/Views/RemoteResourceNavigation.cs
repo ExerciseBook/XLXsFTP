@@ -186,6 +186,7 @@ namespace UI.Views
 
         public override void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
+            if (MainWindow.GlobalLocalResourceNavigation.Status != 0) return;
             string localPath = MainWindow.GlobalLocalResourceNavigation.NavigationLabel.Text;
 
             String remotePath = NavigationLabel.Text;
