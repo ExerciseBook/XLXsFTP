@@ -204,7 +204,14 @@ namespace UI.Views
                     string name = t.FilePath;
                     while (name.StartsWith('/')) name = name.Substring(1);
 
-                    this.AddToCreateTaskList(Path.Join(localPath, name), remotePath + name, t.Type == 1);
+                    if (t.Type == 1)
+                    {
+                        this.AddToCreateTaskList( Path.Join(localPath, t.FileName), name, t.Type == 1);
+                    }
+                    else
+                    {
+                        this.AddToCreateTaskList(localPath,  name, t.Type == 1);
+                    }
                 }
             }
         }
@@ -223,6 +230,7 @@ namespace UI.Views
                     if (t.Type != 0 && t.Type != 1) continue;
                     string name = t.FilePath;
                     while (name.StartsWith('/')) name = name.Substring(1);
+                    name = '/' + name;
 
                     this.AddToDeleteTaskList(null, remotePath + name, t.FileName, t.Type == 1);
                 }
@@ -255,7 +263,8 @@ namespace UI.Views
                         }
                         else
                         {
-                            AddTransmitTask(Direction.ToLocal, localPath, remotePath, fileInfo.FileName, 0);
+                            AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName), remotePath,
+                                fileInfo.FileName, 0);
                         }
                     }
                 }
