@@ -169,9 +169,6 @@ namespace UI.Views
                     foreach (DirectoryInfo Directory in folder.GetDirectories("*.*"))
                     {
                         this.AddToDeleteTaskList(Directory.FullName, null);
-
-                        AddTransmitTask(Direction.DeleteLocal, Directory.FullName, null,
-                            Directory.Name, 1);
                     }
 
                     foreach (FileInfo file in folder.GetFiles("*.*"))

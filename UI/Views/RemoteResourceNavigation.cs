@@ -224,7 +224,7 @@ namespace UI.Views
                     string name = t.FilePath;
                     while (name.StartsWith('/')) name = name.Substring(1);
 
-                    this.AddToDeleteTaskList(null, remotePath + name, t.Type == 1);
+                    this.AddToDeleteTaskList(null, remotePath + name, t.FileName, t.Type == 1);
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace UI.Views
         }
 
 
-        private void AddToDeleteTaskList(string localPath, string remotePath, bool isFolder)
+        private void AddToDeleteTaskList(string localPath, string remotePath, string fileName, bool isFolder)
         {
             try
             {
@@ -277,25 +277,17 @@ namespace UI.Views
                 {
                     if (fileInfo.IsFolder)
                     {
-                        AddToDeleteTaskList(null, remotePath + '/' + fileInfo.FileName,
+                        AddToDeleteTaskList(null, remotePath + '/' + fileInfo.FileName, fileInfo.FileName,
                             fileInfo.IsFolder);
-
-                        AddTransmitTask(Direction.DeleteRemote, null,
-                            remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
                     }
                     else
                     {
-                        if (isFolder)
-                        {
-                            AddTransmitTask(Direction.DeleteRemote, null,
-                                remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 0);
-                        }
-                        else
-                        {
-                            AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileInfo.FileName, 0);
-                        }
+                        AddTransmitTask(Direction.DeleteRemote, null, remotePath + '/' + fileInfo.FileName,
+                            fileInfo.FileName, 0);
                     }
                 }
+
+                AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileName, isFolder ? 1 : 0);
             }
             catch (Exception excpetion)
             {

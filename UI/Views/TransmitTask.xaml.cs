@@ -145,9 +145,16 @@ namespace UI.Views
 
                     case Direction.DeleteRemote:
                     {
-                        //TODO
+                        if (this._type == 0)
+                        {
+                            this.client.Delete(this._remotePath);
+                        }
+                        else if (this._type == 1)
+                        {
+                            this.client.DeleteDirectory(this._remotePath);
+                        }
                         break;
-                    }
+                        }
 
                     case Direction.DeleteLocal:
                     {
