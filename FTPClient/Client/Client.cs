@@ -18,6 +18,7 @@ namespace FTPClient.Client
         private readonly IPEndPoint _serverIpe;
         private readonly Authorization _authorization;
         private readonly SocketHelper _commandHelper;
+        private SystemType _serverSystemType;
 
         public bool Connected { get; private set; } = false;
 
@@ -48,7 +49,7 @@ namespace FTPClient.Client
             String line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
             if (status != 220) throw new FTPClientException(status, line);
 
-            _authorization.Login();
+            _authorization.Login(out this._serverSystemType);
 
             this.Connected = true;
         }
@@ -468,7 +469,7 @@ namespace FTPClient.Client
             do
             {
                 line = System.Text.Encoding.UTF8.GetString(dataHelper.Readln());
-                if (line.Length > 0) ret.Add(new FileInfo(line));
+                if (line.Length > 0) ret.Add(new FileInfo(line, this._serverSystemType));
             } while (line.Length != 0);
 
             // 226 => 结束数据连接

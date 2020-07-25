@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace FTPClient.Client
@@ -27,11 +28,25 @@ namespace FTPClient.Client
             private readonly DateTime _now = DateTime.Now;
 
 
-            public FileModifiedAt(string s, string s1, string s2)
+            public FileModifiedAt(SystemType systemType, string s, string s1, string s2)
             {
+                if (systemType != SystemType.Unix) throw new ArgumentException("Invalid argument found when parsing LIST.");
+
                 this._time = s2.Contains(":")
                     ? DateTime.Parse("" + this._now.Year + s + ' ' + s1 + ' ' + s2 + ':' + "00")
                     : DateTime.Parse(s + ' ' + s1 + ' ' + s2);
+                this._time = this._time.ToLocalTime();
+            }
+
+            public FileModifiedAt(SystemType systemType, string s, string s1)
+            {
+                if (systemType != SystemType.Windows) throw new ArgumentException("Invalid argument found when parsing LIST.");
+
+                string dateTime = "";
+                string[] date = s.Split('-');
+                dateTime = date[2] + '-' + date[0] + '-' + date[1] + ' ' + s1;
+
+                this._time = DateTime.Parse(dateTime);
                 this._time = this._time.ToLocalTime();
             }
 
@@ -85,10 +100,23 @@ namespace FTPClient.Client
         /// </summary>
         public string FileName { get; }
 
-        public FileInfo(string line)
+        public FileInfo(string line, SystemType serverSystemType)
         {
+            int nameIndex = 0;
+            int columnCount = 0;
+            switch (serverSystemType)
+            {
+                case SystemType.Unix:
+                    nameIndex = 8;
+                    columnCount = 9;
+                    break;
+                case SystemType.Windows:
+                    nameIndex = 3;
+                    columnCount = 4;
+                    break;
+            }
 
-            string[] s = new string[9];
+            string[] s = new string[columnCount];
 
             int i = 0;
             int flag = 1;
@@ -100,7 +128,7 @@ namespace FTPClient.Client
             for (; p < line.Length; p++)
             {
                 // 文件名部分无视空格半段
-                if (i == 8)
+                if (i == nameIndex)
                 {
                     s[i] += line[p];
                     continue;
@@ -130,13 +158,31 @@ namespace FTPClient.Client
                 }
             }
 
-            this.Permission = new FilePermission(s[0]);
-            this.Preserved = Int32.Parse(s[1]);
-            this.Owner = s[2];
-            this.Group = s[3];
-            this.Size = Int64.Parse(s[4]);
-            this.ModifiedAt = new FileModifiedAt(s[5], s[6], s[7]);
-            this.FileName = s[8];
+            switch (serverSystemType)
+            {
+                case SystemType.Unix:
+                    this.Permission = new FilePermission(s[0]);
+                    this.Preserved = Int32.Parse(s[1]);
+                    this.Owner = s[2];
+                    this.Group = s[3];
+                    this.Size = this.IsFolder ? 0 : Int64.Parse(s[4]);
+                    this.ModifiedAt = new FileModifiedAt(serverSystemType,s[5], s[6], s[7]);
+                    this.FileName = s[8];
+                    break;
+                case SystemType.Windows:
+                    this.Permission = s[2].ToLower() == "<dir>"
+                        ? new FilePermission("drwxrwxrwx")
+                        : new FilePermission("-rwxrwxrwx");
+                    this.Preserved = 0;
+                    this.Owner = "";
+                    this.Group = "";
+                    this.Size = this.IsFolder ? 0 : Int64.Parse(s[2]);
+                    this.ModifiedAt = new FileModifiedAt(serverSystemType, s[0], s[1]);
+                    this.FileName = s[3];
+                    break;
+            }
+
+
         }
     }
 }

@@ -47,6 +47,7 @@ namespace FTPClient.Helpers
 
             return ret;
         }
+
         public byte[] Readln()
         {
             int status;
