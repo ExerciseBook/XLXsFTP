@@ -279,15 +279,25 @@ namespace UI.Views
                     {
                         AddToDeleteTaskList(null, remotePath + '/' + fileInfo.FileName, fileInfo.FileName,
                             fileInfo.IsFolder);
+
+                        AddTransmitTask(Direction.ToLocal, Path.Join(localPath, fileInfo.FileName),
+                            remotePath + '/' + fileInfo.FileName, fileInfo.FileName, 1);
                     }
                     else
                     {
-                        AddTransmitTask(Direction.DeleteRemote, null, remotePath + '/' + fileInfo.FileName,
-                            fileInfo.FileName, 0);
+                        if (isFolder)
+                        {
+                            AddTransmitTask(Direction.DeleteRemote, null,remotePath + '/' + fileInfo.FileName, fileInfo.FileName, fileInfo.IsFolder ? 1 : 0);
+                        }
+                        else
+                        {
+                            AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileInfo.FileName, fileInfo.IsFolder ? 1 : 0 );
+                        }
                     }
                 }
 
-                AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileName, isFolder ? 1 : 0);
+                if (isFolder)
+                    AddTransmitTask(Direction.DeleteRemote, null, remotePath, fileName, 1);
             }
             catch (Exception excpetion)
             {
