@@ -75,7 +75,7 @@ namespace UI.Helpers
                         break;
                     case 1:
                         username = authorization[0];
-                        password = username + "@example.com";
+                        password = "";
                         break;
                     default:
                         throw new ArgumentException("Authorization information format error.");
