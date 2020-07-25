@@ -35,6 +35,11 @@ namespace UI.Views
         {
             GlobalTaskListWorker.Status = 1;
             GlobalTaskList.sem.Release();
+
+            if (GlobalTaskListWorker.ActivatedTask is TransmitTask aTask)
+            {
+                aTask.Delete();
+            }
         }
     }
 }

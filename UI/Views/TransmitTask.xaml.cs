@@ -37,6 +37,8 @@ namespace UI.Views
 
         private int _status = 0;
 
+        Client client = null;
+
         public TransmitTask(Direction direction, string localPath, string remotePath, string fileName, int type)
         {
             InitializeComponent();
@@ -78,8 +80,6 @@ namespace UI.Views
                 if (this._status != 0) return;
                 this._status = 1;
 
-                Client client = null;
-
                 if (this._direction != Direction.Null)
                 {
                     client = new Client(MainWindow.Server, MainWindow.Username, MainWindow.Password);
@@ -108,12 +108,13 @@ namespace UI.Views
                         {
                             client?.Download(this._localPath, this._remotePath, 0);
                         }
-                        else if (this._type == 1)
-                        // 判断本地目录是否存在
-                        if (!Directory.Exists(this._localPath))
-                        {
-                            // 创建目录
-                            Directory.CreateDirectory(this._localPath);
+                        else if (this._type == 1) { 
+                            // 判断本地目录是否存在
+                            if (!Directory.Exists(this._localPath))
+                            {
+                                // 创建目录
+                                Directory.CreateDirectory(this._localPath);
+                            }
                         }
                         break;
                     }
@@ -181,9 +182,16 @@ namespace UI.Views
 
         public void Delete()
         {
-            if (!this._occupyFlag.TryOccupied() || this._status != 0) return;
-            Sem.WaitOne();
-            MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
+            // if (!this._occupyFlag.TryOccupied()) return;
+            if (this._status == 0) { 
+                Sem.WaitOne();
+                MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
+            }
+            else
+            {
+                this.client.TerminateTransmissionTask();
+                MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(this);
+            }
         }
 
     }

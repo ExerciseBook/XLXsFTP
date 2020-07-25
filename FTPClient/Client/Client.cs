@@ -23,6 +23,21 @@ namespace FTPClient.Client
         public bool Connected { get; private set; } = false;
 
         /// <summary>
+        /// 是否传输
+        /// </summary>
+        public bool Working = true;
+
+        /// <summary>
+        /// 终止传输任务
+        /// </summary>
+        public void TerminateTransmissionTask() => this.Working = false;
+
+        /// <summary>
+        /// 终止传输任务
+        /// </summary>
+        public void ResumeTransmissionTask() => this.Working = true;
+
+        /// <summary>
         /// 创建客户端对象
         /// </summary>
         /// <param name="server"></param>
@@ -253,7 +268,7 @@ namespace FTPClient.Client
             {
                 FileStream fs = new FileStream(localPath, FileMode.Open, FileAccess.Read);
 
-                while (start < fs.Length)
+                while (start < fs.Length && this.Working)
                 {
                     if (ProcessUpdate != null) ProcessUpdate(start, fs.Length);
 
@@ -408,7 +423,7 @@ namespace FTPClient.Client
                 int buffsize = 1048576;
                 byte[] buff = new byte[buffsize];
 
-                while (start < fileSize)
+                while (start < fileSize && this.Working)
                 {
                     if (ProcessUpdate != null) ProcessUpdate(start, fs.Length);
                     // 接收数据
@@ -495,6 +510,9 @@ namespace FTPClient.Client
         /// <param name="total"></param>
         public delegate void ProcessUpdateDelegate(long done, long total);
 
+        /// <summary>
+        /// 进度条更新事件
+        /// </summary>
         public event ProcessUpdateDelegate ProcessUpdate;
     }
 }

@@ -101,7 +101,7 @@ namespace UI.Views
            {
                if (anItem is TransmitTask t)
                {
-                   if (t.CanDelete) deleteList.Add(t);
+                   /* if (t.CanDelete) */ deleteList.Add(t);
                }
            };
            

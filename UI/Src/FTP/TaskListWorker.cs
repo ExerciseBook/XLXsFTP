@@ -37,13 +37,14 @@ namespace UI.FTP
                 Mutex.WaitOne();
 
                 object t = MainWindow.GlobalTaskList.ListViewTaskList.Items[0];
+                this.ActivatedTask = t;
                 if (t is TransmitTask aTask)
                 {
                     aTask.Execute();
                 }
 
                 Thread.Sleep(100);
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current?.Dispatcher.Invoke(() =>
                 {
                     MainWindow.GlobalTaskList.ListViewTaskList.Items.Remove(t);
                     if (MainWindow.GlobalTaskList.ListViewTaskList.Items.Count == 0)
@@ -57,5 +58,6 @@ namespace UI.FTP
             }
         }
 
-}
+        public object ActivatedTask { get; set; }
+    }
 }
