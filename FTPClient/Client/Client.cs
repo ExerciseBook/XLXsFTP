@@ -229,7 +229,8 @@ namespace FTPClient.Client
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 350) throw new FTPClientException(status, line);
+            if (status / 100 == 5) offset = 0;
+            if (status != 350 && status / 100 != 5) throw new FTPClientException(status, line);
 
             // STOR 路径 => 150
             _commandHelper.Writeln("STOR " + filename);
@@ -320,7 +321,8 @@ namespace FTPClient.Client
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 350) throw new FTPClientException(status, line);
+            if (status / 100 == 5) offset = 0;
+            if (status != 350 && status / 100 != 5) throw new FTPClientException(status, line);
 
             // STOR 路径 => 150
             _commandHelper.Writeln("STOR " + filename);
@@ -422,7 +424,8 @@ namespace FTPClient.Client
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 350) throw new FTPClientException(status, line);
+            if (status / 100 == 5) offset = 0;
+            if (status != 350 && status / 100 != 5) throw new FTPClientException(status, line);
 
             // RETR 路径 => 150;
             _commandHelper.Writeln("RETR " + filename);
@@ -467,7 +470,8 @@ namespace FTPClient.Client
             // REST 续传 => 350
             _commandHelper.Writeln("REST " + offset);
             line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 350) throw new FTPClientException(status, line);
+            if (status / 100 == 5) offset = 0;
+            if (status != 350 && status / 100 != 5) throw new FTPClientException(status, line);
 
             // RETR 路径 => 150;
             _commandHelper.Writeln("RETR " + remotePath);
