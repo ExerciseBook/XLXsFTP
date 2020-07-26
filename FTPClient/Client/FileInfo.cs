@@ -76,7 +76,7 @@ namespace FTPClient.Client
                 this._time = this._time.ToLocalTime();
             }
 
-            public String ToString()
+            public override String ToString()
             {
                 return this._time.Year == this._now.Year
                     ? this._time.ToString("MMMM dd HH:mm")
