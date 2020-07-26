@@ -112,7 +112,7 @@ namespace FTPClient.Client
                 dataSocket = CommandHelper.AddressParserAndConnect(1, dataConnection, _serverIpe.Address);
                 dataHelper = new SocketHelper(dataSocket);
             }
-            else if (status == 522) //不支持EPSV,使用PASV
+            else if (status / 100 == 5) // 不支持 EPSV, 使用 PASV
             {
                 // PASV => 227;
                 _commandHelper.Writeln("PASV");
