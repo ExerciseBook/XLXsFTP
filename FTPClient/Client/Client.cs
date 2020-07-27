@@ -49,7 +49,7 @@ namespace FTPClient.Client
         /// <summary>
         /// 是否传输
         /// </summary>
-        public bool Working = true;
+        public bool Working { get; private set; } = true;
 
         /// <summary>
         /// 终止传输任务
