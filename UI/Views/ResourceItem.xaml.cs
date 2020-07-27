@@ -77,6 +77,15 @@ namespace UI.Views
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="navigationLabel"></param>
+        /// <param name="type">0普通文件 / 1文件夹 / 2本地上层目录 / 4远程上层目录</param>
+        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
+        /// <param name="size"></param>
+        /// <param name="modifiedTime"></param>
         public ResourceItem(TextBox navigationLabel, int type, string filePath, string fileName, long size,
             string modifiedTime)
         {

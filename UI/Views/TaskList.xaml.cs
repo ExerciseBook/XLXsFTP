@@ -111,13 +111,10 @@ namespace UI.Views
             ListViewTaskList.ScrollIntoView(ListViewTaskList.Items[idx]);
         }
 
-        private static Semaphore Mutex => MainWindow.GlobalTaskList?.mutex;
-
-        private static Semaphore Sem => MainWindow.GlobalTaskList?.sem;
 
         private void TaskList_Delete(object sender, RoutedEventArgs e)
         {
-            if (Mutex == null) return;
+            if (this.mutex == null) return;
             //Mutex.WaitOne();
 
             List<TransmitTask> deleteList = new List<TransmitTask>();

@@ -98,7 +98,7 @@ namespace FTPClient.Client
         /// </summary>
         /// <param name="dataSocket"></param>
         /// <param name="dataHelper"></param>
-        public void InitDataConnection(out Socket dataSocket, out SocketHelper dataHelper)
+        private void InitDataConnection(out Socket dataSocket, out SocketHelper dataHelper)
         {
             string line;
             int status;
