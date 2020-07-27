@@ -433,7 +433,7 @@ namespace FTPClient.Client
             if (status != 150 && status != 125) throw new FTPClientException(status, line);
 
             // 根据文件大小获取信息
-            byte[] file = new byte[fileSize];
+            byte[] file = new byte[fileSize - offset];
             dataSocket.Receive(file);
 
             // 226 => 结束数据连接
