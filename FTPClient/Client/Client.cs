@@ -85,9 +85,13 @@ namespace FTPClient.Client
             _commandConnection.Connect(_serverIpe);
 
             int status;
-            String line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
-            if (status != 220) throw new FTPClientException(status, line);
-
+            String line;
+            do {
+                line = System.Text.Encoding.UTF8.GetString(_commandHelper.Readln(out status));
+                if (line.Substring(0, 3) != "220")
+                    throw new FTPClientException(status, line);
+            } while (line.Substring(0, 4) == "220-");
+            
             _authorization.Login(out this._serverSystemType);
 
             this.Connected = true;
