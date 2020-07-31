@@ -92,7 +92,6 @@ namespace FTPClient.Client
         /// <summary>
         /// 是否为文件夹
         /// </summary>
-        /// <returns></returns>
         public bool IsFolder => Permission.IsFolder();
 
         /// <summary>
@@ -153,7 +152,7 @@ namespace FTPClient.Client
 
             for (; p < line.Length; p++)
             {
-                // 文件名部分无视空格半段
+                // 文件名部分无视空格判断
                 if (i == nameIndex)
                 {
                     s[i] += line[p];
